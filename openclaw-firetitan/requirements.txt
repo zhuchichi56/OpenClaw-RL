@@ -1,0 +1,6 @@
+fireworks-ai[training]
+httpx
+fastapi
+uvicorn
+transformers
+torch
