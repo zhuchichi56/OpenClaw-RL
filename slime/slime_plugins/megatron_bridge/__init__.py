@@ -16,7 +16,28 @@ try:
 except Exception:
     pass
 
-if os.getenv("SLIME_QWEN35_TEXT_ONLY_BRIDGE", "").lower() in {"1", "true", "yes", "on"}:
-    import slime_plugins.megatron_bridge.qwen3_5_text  # noqa: F401  # register text-only Qwen3.5 bridge
-else:
-    import slime_plugins.megatron_bridge.qwen3_5  # noqa: F401  # register multimodal Qwen3.5 bridge
+_REGISTERED_QWEN35_BRIDGES: set[str] = set()
+
+
+def _use_text_only_qwen35_bridge() -> bool:
+    return os.getenv("SLIME_QWEN35_TEXT_ONLY_BRIDGE", "").lower() in {"1", "true", "yes", "on"}
+
+
+def ensure_bridge_plugins_registered(model_type: str | None = None) -> None:
+    """Register only the bridge plugins needed for the current model type."""
+    if _use_text_only_qwen35_bridge():
+        bridge_kind = "qwen3_5_text"
+    elif model_type == "qwen3_5":
+        bridge_kind = "qwen3_5"
+    else:
+        bridge_kind = None
+
+    if bridge_kind is None or bridge_kind in _REGISTERED_QWEN35_BRIDGES:
+        return
+
+    if bridge_kind == "qwen3_5_text":
+        import slime_plugins.megatron_bridge.qwen3_5_text  # noqa: F401  # register text-only Qwen3.5 bridge
+    else:
+        import slime_plugins.megatron_bridge.qwen3_5  # noqa: F401  # register multimodal Qwen3.5 bridge
+
+    _REGISTERED_QWEN35_BRIDGES.add(bridge_kind)
