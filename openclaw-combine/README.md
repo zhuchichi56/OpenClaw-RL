@@ -42,10 +42,6 @@ For each main-line turn, after the next state arrives:
 cd slime
 # Qwen3
 bash ../openclaw-combine/run_qwen3_4b_openclaw_combine.sh
-# Qwen3.5
-bash ../openclaw-combine/run_qwen35_4b_openclaw_combine.sh
-# Qwen3.5 LoRA (4 GPUs)
-bash ../openclaw-combine/run_qwen35_4b_openclaw_combine_lora.sh
 ```
 
 ### Key Environment Variables
