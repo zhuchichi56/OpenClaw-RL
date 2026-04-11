@@ -31,8 +31,6 @@ Default script:
 cd slime
 # Qwen3
 bash ../openclaw-opd/run_qwen3_4b_openclaw_opd.sh
-# Qwen3.5
-bash ../openclaw-opd/run_qwen35_4b_openclaw_opd.sh
 ```
 
 ## Option B: Top-K Logits Distillation (SDFT/SDPO-style)
@@ -65,8 +63,6 @@ Top-K is implemented as an additive extension:
 cd slime
 # Qwen3
 bash ../openclaw-opd/run_qwen3_4b_openclaw_opd_topk.sh
-# Qwen3.5
-bash ../openclaw-opd/run_qwen35_4b_openclaw_opd_topk.sh
 ```
 
 Equivalent key args:
