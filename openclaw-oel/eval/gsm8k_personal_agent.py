@@ -630,13 +630,14 @@ def main():
     else:
         eval_problems = None  # will use default GSM8K
 
-    # Always load full GSM8K as fallback
-    all_problems = load_gsm8k()
-    print(f"Loaded {len(all_problems)} GSM8K problems (full set)")
-    if train_problems is None:
-        train_problems = all_problems
-    if eval_problems is None:
-        eval_problems = all_problems
+    # Load full GSM8K as fallback only if needed
+    if train_problems is None or eval_problems is None:
+        all_problems = load_gsm8k()
+        print(f"Loaded {len(all_problems)} GSM8K problems (full set)")
+        if train_problems is None:
+            train_problems = all_problems
+        if eval_problems is None:
+            eval_problems = all_problems
     print(f"Method: {args.method}")
     print(f"Training rounds: {args.training_rounds}")
     print(f"Sessions per round: {args.sessions_per_round}")
