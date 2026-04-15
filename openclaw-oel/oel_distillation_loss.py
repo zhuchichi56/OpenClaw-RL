@@ -2,7 +2,11 @@
 
 Implements context distillation: the teacher sees experience-augmented prompts,
 the student sees bare prompts. We minimize KL(student || teacher) over the
-teacher's top-K vocabulary tokens plus a tail bin.
+top-K vocabulary tokens plus a tail bin.
+
+Top-K selection source (controlled by env OPENCLAW_OEL_TOPK_SOURCE):
+  - "teacher" (default): top-K tokens selected from teacher's distribution
+  - "student": top-K tokens selected from student's distribution
 
 Supports both Megatron and FSDP backends:
   - Megatron: uses fused_vocab_parallel_cross_entropy + tensor-parallel group
@@ -14,11 +18,15 @@ Usage:
     --distill-topk 50
     --disable-compute-advantages-and-returns
 
+    # Select top-K from student distribution:
+    export OPENCLAW_OEL_TOPK_SOURCE=student
+
 Reference: OEL (arXiv 2603.16856), OPCD (arXiv 2602.12275), SDFT (arXiv 2601.19897)
 """
 
 from __future__ import annotations
 
+import os
 from argparse import Namespace
 from typing import Callable, Iterator
 
@@ -63,6 +71,66 @@ def _fsdp_compute_log_probs(logits: torch.Tensor, tokens: torch.Tensor) -> torch
     return F.log_softmax(logits, dim=-1).gather(-1, tokens.unsqueeze(-1))
 
 
+def _gather_teacher_at_student_topk(
+    teacher_topk_logps: torch.Tensor,
+    teacher_topk_indices: torch.Tensor,
+    student_topk_indices: torch.Tensor,
+    K: int,
+) -> torch.Tensor:
+    """Gather teacher log-probs at student's top-K token positions.
+
+    The teacher's top-N (N >= K, typically N=1000 when topk_source=student)
+    is used to look up teacher log-probs at student's top-K positions.
+    For tokens in student's top-K that appear in teacher's top-N, we use
+    the exact teacher logprob. For tokens NOT in teacher's top-N, we
+    approximate with the teacher's tail probability.
+
+    Args:
+        teacher_topk_logps:   [R, N] teacher's top-N log-probs (N may be >> K)
+        teacher_topk_indices: [R, N] teacher's top-N token indices
+        student_topk_indices: [R, K] student's top-K token indices
+        K: number of student's top-K tokens
+
+    Returns:
+        [R, K] teacher log-probs at student's top-K positions
+    """
+    R = student_topk_indices.shape[0]
+    N = teacher_topk_indices.shape[1]  # teacher's top-N (may be >> K)
+    device = student_topk_indices.device
+
+    # Compute teacher tail: log(1 - sum(exp(teacher_topN_logps)))
+    teacher_log_sum = torch.logsumexp(teacher_topk_logps, dim=-1, keepdim=True)  # [R, 1]
+    teacher_log_sum = torch.clamp(teacher_log_sum, max=-1e-7)
+    teacher_tail_total = torch.log(-torch.expm1(teacher_log_sum))  # [R, 1]
+    # Each non-top-N token gets uniform share of remaining tail mass
+    VOCAB_SIZE_APPROX = 151936  # Qwen vocab size
+    teacher_tail_per_token = teacher_tail_total - torch.log(
+        torch.tensor(max(VOCAB_SIZE_APPROX - N, 1), dtype=torch.float32, device=device)
+    )  # [R, 1]
+
+    # Start with tail approximation for all positions
+    result = teacher_tail_per_token.expand(R, K).clone()  # [R, K]
+
+    # For each student top-K token, check if it's in teacher's top-N
+    # student_topk_indices: [R, K], teacher_topk_indices: [R, N]
+    # Expand for broadcasting: [R, K, 1] vs [R, 1, N]
+    s_exp = student_topk_indices.unsqueeze(2)  # [R, K, 1]
+    t_exp = teacher_topk_indices.unsqueeze(1)  # [R, 1, N]
+    match = (s_exp == t_exp)  # [R, K, N]
+
+    # For each student position, find if any teacher position matches
+    has_match = match.any(dim=2)  # [R, K]
+
+    # Where matched, get the teacher logprob at that position
+    match_teacher_idx = match.float().argmax(dim=2)  # [R, K]
+    matched_teacher_logps = teacher_topk_logps.gather(1, match_teacher_idx)  # [R, K]
+
+    # Fill in matched positions with exact teacher logprobs
+    result = torch.where(has_match, matched_teacher_logps, result)
+
+    return result
+
+
 def oel_distillation_loss_function(
     args: Namespace,
     batch: dict,
@@ -88,6 +156,9 @@ def oel_distillation_loss_function(
     total_lengths = batch["total_lengths"]
 
     K = args.distill_topk
+
+    # Top-K source: "teacher" (default) or "student"
+    topk_source = os.getenv("OPENCLAW_OEL_TOPK_SOURCE", "teacher").strip().lower()
 
     # Select backend-appropriate functions
     if _USE_MEGATRON:
@@ -128,22 +199,52 @@ def oel_distillation_loss_function(
         if not t_indices.is_cuda:
             t_indices = t_indices.to(device=logits_chunk.device)
 
-        # Gather student log-probs at teacher's top-K positions
-        if _USE_MEGATRON:
-            student_logps_k = []
-            need_clone = torch.is_grad_enabled()
-            for k in range(K):
-                logit_input = logits_chunk.clone() if need_clone else logits_chunk
-                lp_k = compute_lp(logit_input, t_indices[:, k])
-                student_logps_k.append(lp_k.squeeze(-1))
-            student_topk_logps = torch.stack(student_logps_k, dim=-1)
+        if topk_source == "student":
+            # --- Student top-K: select top-K from student's distribution ---
+            if _USE_MEGATRON:
+                # Megatron: compute full student log-probs via repeated calls,
+                # then select top-K from student; gather teacher at those positions
+                # For efficiency, fall back to FSDP-style log_softmax when possible
+                student_full_logps = F.log_softmax(logits_chunk.float(), dim=-1)
+                student_topk_logps_i, student_topk_indices = torch.topk(
+                    student_full_logps, K, dim=-1
+                )
+                # Gather teacher log-probs at student's top-K positions
+                # teacher_topk_logprobs[i] has shape [R, K] from teacher's top-K —
+                # we need teacher's logprobs at student's top-K positions instead.
+                # Recompute teacher log-probs over the full simplex from the teacher's
+                # top-K using log-sum-exp, then gather at student's positions.
+                # However, we only have teacher's top-K, not full distribution.
+                # So we approximate: gather from teacher's full distribution if available,
+                # otherwise use the available top-K data with zero-fill for missing tokens.
+                # Best approach: compute teacher log-probs at student's top-K from
+                # the teacher_topk data (K tokens + tail).
+                teacher_topk_for_student = _gather_teacher_at_student_topk(
+                    t_logps, t_indices, student_topk_indices, K
+                )
+            else:
+                # FSDP: single log_softmax, then topk from student
+                student_full_logps = F.log_softmax(logits_chunk, dim=-1)  # [R, V]
+                student_topk_logps_i, student_topk_indices = torch.topk(
+                    student_full_logps, K, dim=-1
+                )
+                teacher_topk_for_student = _gather_teacher_at_student_topk(
+                    t_logps, t_indices, student_topk_indices, K
+                )
+
+            all_student_topk_logps.append(student_topk_logps_i)
+            all_teacher_topk_logps.append(teacher_topk_for_student)
+
         else:
-            # FSDP: single log_softmax + gather all K at once (memory efficient)
+            # --- Teacher top-K (default): select top-K from teacher's distribution ---
+            # Gather student log-probs at teacher's top-K positions
+            # Use single log_softmax + gather for all K (memory efficient)
             log_probs = F.log_softmax(logits_chunk, dim=-1)  # [R, V]
             student_topk_logps = log_probs.gather(-1, t_indices[:, :K])  # [R, K]
+            del log_probs  # free immediately
 
-        all_student_topk_logps.append(student_topk_logps)
-        all_teacher_topk_logps.append(t_logps)
+            all_student_topk_logps.append(student_topk_logps)
+            all_teacher_topk_logps.append(t_logps)
 
     # Concatenate all samples
     student_topk = torch.cat(all_student_topk_logps, dim=0)  # [total_tokens, K]
@@ -191,6 +292,7 @@ def oel_distillation_loss_function(
         "loss": loss.clone().detach(),
         "kl_loss": kl_loss.clone().detach(),
         "entropy_loss": entropy_loss.clone().detach(),
+        "topk_source": torch.tensor(0.0 if topk_source == "teacher" else 1.0, device=logits.device),
     }
 
     if per_token_kl.numel() > 0:

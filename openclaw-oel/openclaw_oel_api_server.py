@@ -50,7 +50,7 @@ _NON_STANDARD_BODY_KEYS = {"session_id", "session_done", "turn_type"}
 # Experience prompts
 # ---------------------------------------------------------------------------
 
-EXPERIENCE_UPDATE_PROMPT_V4 = """\
+EXPERIENCE_UPDATE_PROMPT_V1 = """\
 You are an AI language model that continuously refines its internal experience.
 
 Here is the latest interaction (the user's question and your answer):
@@ -79,6 +79,34 @@ Additional Experience:
 # Experience
 - EXPERIENCE ITEM: ...
 - EXPERIENCE ITEM: ...
+- EXPERIENCE ITEM: ...
+"""
+
+EXPERIENCE_UPDATE_PROMPT_V2 = """\
+You are an AI assistant that extracts actionable lessons from user interactions.
+
+Here is the latest interaction between a user and an assistant:
+{LATEST_EXPERIENCE}
+
+Here is the previous accumulated experience:
+# Experience
+{PREVIOUS_EXPERIENCE}
+
+Your task:
+Extract 1-3 NEW, specific, actionable lessons from this interaction that are NOT already covered by the previous experience.
+
+Rules:
+- Each lesson MUST be a concrete do/don't rule with specific examples. BAD: "Use natural language". GOOD: "Write calculations as '16 minus 7 is 9' instead of '16 - 7 = 9'".
+- Pay close attention to what the USER praised, criticized, or requested — the user's feedback is the most important signal.
+- Do NOT repeat or rephrase any insight already present in the previous experience. If the interaction only reinforces existing lessons, output exactly: "No new experience."
+- Format strictly as:
+- EXPERIENCE ITEM: ...
+- EXPERIENCE ITEM: ...
+
+Output the final result in exactly this format:
+
+Additional Experience:
+# Experience
 - EXPERIENCE ITEM: ...
 """
 
@@ -286,6 +314,15 @@ class OpenClawOELAPIServer:
         self._teacher_lp_semaphore = asyncio.Semaphore(max(1, self._teacher_lp_max_concurrency))
         self.distill_topk = int(getattr(args, "distill_topk", 0))
         self._use_topk_distillation = self.distill_topk > 0
+        # When using student-based top-K selection, request more teacher logprobs
+        # so we can accurately look up teacher probs at student's top-K positions.
+        self._topk_source = os.getenv("OPENCLAW_OEL_TOPK_SOURCE", "teacher").strip().lower()
+        if self._topk_source == "student":
+            # Request 20x more logprobs from teacher to cover student's top-K
+            self._teacher_topk_request_size = min(self.distill_topk * 20, 2000) if self.distill_topk > 0 else 0
+            logger.info("[OpenClaw-OEL] topk_source=student, teacher_request_size=%d", self._teacher_topk_request_size)
+        else:
+            self._teacher_topk_request_size = self.distill_topk
         prm_ip = getattr(args, "prm_router_ip", None)
         prm_port = getattr(args, "prm_router_port", None)
         self._prm_url = f"http://{prm_ip}:{prm_port}/generate" if prm_ip and prm_port else ""
@@ -299,6 +336,24 @@ class OpenClawOELAPIServer:
         self._mode = os.getenv("OPENCLAW_OEL_MODE", self.MODE_ONLINE).strip().lower()
         logger.info("[OpenClaw-OEL] mode=%s", self._mode)
 
+        # ----- Experience extraction prompt -----
+        # OPENCLAW_OEL_EXTRACTION_PROMPT: "v1" (general), "v2" (specific + dedup, default),
+        #   or a file path to a custom prompt template (must contain {LATEST_EXPERIENCE} and {PREVIOUS_EXPERIENCE})
+        _ext_prompt_cfg = os.getenv("OPENCLAW_OEL_EXTRACTION_PROMPT", "v2").strip()
+        if _ext_prompt_cfg.lower() == "v1":
+            self._extraction_prompt_template = EXPERIENCE_UPDATE_PROMPT_V1
+            logger.info("[OpenClaw-OEL] extraction prompt: v1 (general)")
+        elif _ext_prompt_cfg.lower() == "v2":
+            self._extraction_prompt_template = EXPERIENCE_UPDATE_PROMPT_V2
+            logger.info("[OpenClaw-OEL] extraction prompt: v2 (specific + dedup)")
+        elif os.path.isfile(_ext_prompt_cfg):
+            with open(_ext_prompt_cfg, "r", encoding="utf-8") as f:
+                self._extraction_prompt_template = f.read()
+            logger.info("[OpenClaw-OEL] extraction prompt: loaded from %s", _ext_prompt_cfg)
+        else:
+            self._extraction_prompt_template = EXPERIENCE_UPDATE_PROMPT_V2
+            logger.warning("[OpenClaw-OEL] unknown extraction prompt '%s', falling back to v2", _ext_prompt_cfg)
+
         # ----- Experience accumulation -----
         self._experience_text: str = "No previous experience."
         self._experience_lock = threading.Lock()
@@ -306,6 +361,19 @@ class OpenClawOELAPIServer:
                                                      os.getenv("OPENCLAW_OPCD_EXPERIENCE_MAX_LENGTH", "2048")))
         self._experience_session_count = 0
         self._experience_item_count = 0
+
+        # No-accumulate mode: each session's extracted experience REPLACES the global
+        # experience instead of appending to it. The next session sees only the
+        # experience from the most-recently-completed session.
+        self._no_accumulate = os.getenv("OPENCLAW_OEL_NO_ACCUMULATE", "0") == "1"
+
+        # Per-session experience mode: experience is extracted per-turn within a session
+        # and NOT accumulated across sessions. Each session starts fresh.
+        self._session_experience_mode = os.getenv("OPENCLAW_OEL_SESSION_EXPERIENCE", "0") == "1"
+        self._session_experience: dict[str, str] = {}  # session_id -> experience text
+        self._session_experience_lock = threading.Lock()
+        if self._session_experience_mode:
+            logger.info("[OpenClaw-OEL] session-experience mode ENABLED: per-session, per-turn extraction, no cross-session accumulation")
 
         # Multi-experience pool (OEL consolidate mode)
         self._multi_experience = os.getenv("OPENCLAW_OEL_MULTI_EXPERIENCE", "0") == "1"
@@ -436,12 +504,16 @@ class OpenClawOELAPIServer:
         else:
             logger.warning("[OpenClaw-OEL] no valid experience files found in %s", list_path)
 
-    def get_experience_for_turn(self) -> str:
+    def get_experience_for_turn(self, session_id: str | None = None) -> str:
         """Get experience text for the current turn.
 
+        In session-experience mode, returns per-session experience (no cross-session).
         In multi-experience mode (consolidate), randomly samples from the pool.
         In single-experience mode (online), returns the current accumulated experience.
         """
+        if self._session_experience_mode and session_id:
+            with self._session_experience_lock:
+                return self._session_experience.get(session_id, "No previous experience.")
         if self._multi_experience:
             with self._experience_pool_lock:
                 if self._experience_pool:
@@ -613,6 +685,10 @@ class OpenClawOELAPIServer:
             # Track conversation for experience extraction
             self._record_conversation_turn(session_id, messages, content, tool_calls)
 
+            # Per-session experience: extract after each turn so the next turn's teacher can use it
+            if self._session_experience_mode and self._prm_enabled:
+                self._safe_create_task(self._extract_session_experience(session_id))
+
             logger.info(
                 "[OpenClaw-OEL] MAIN session=%s turn=%d prompt_tokens=%d response_tokens=%d",
                 session_id, turn_num, len(prompt_ids), len(response_ids),
@@ -636,8 +712,15 @@ class OpenClawOELAPIServer:
                 self._save_session_trajectory(session_id)
 
             # Trigger experience extraction (online and extract modes)
-            if self._mode in (self.MODE_ONLINE, self.MODE_EXTRACT):
+            # In session-experience mode, extraction already happens per-turn; skip global accumulation
+            if self._mode in (self.MODE_ONLINE, self.MODE_EXTRACT) and not self._session_experience_mode:
                 self._safe_create_task(self._extract_experience_from_session(session_id))
+
+            # Clean up per-session experience
+            if self._session_experience_mode:
+                with self._session_experience_lock:
+                    self._session_experience.pop(session_id, None)
+                logger.info("[OpenClaw-OEL] session=%s per-session experience cleared", session_id)
 
             self._turn_counts.pop(session_id, None)
             logger.info("[OpenClaw-OEL] session=%s done -> cleaned up (mode=%s)", session_id, self._mode)
@@ -723,7 +806,7 @@ class OpenClawOELAPIServer:
             )
 
         # Get experience (may be randomly sampled in multi-experience mode)
-        experience = self.get_experience_for_turn()
+        experience = self.get_experience_for_turn(session_id=session_id)
 
         # Construct experience-augmented prompt
         enhanced_messages = self._inject_experience_to_messages(
@@ -845,6 +928,70 @@ class OpenClawOELAPIServer:
                         {"user": last_user, "assistant": response_content or "[tool call]"}
                     )
 
+    async def _extract_session_experience(self, session_id: str):
+        """Extract experience from current session conversation and store per-session.
+
+        Unlike _extract_experience_from_session which accumulates globally,
+        this stores experience only for the current session. Each turn triggers
+        a fresh extraction from all conversation so far in this session.
+        The experience is cleared when the session ends.
+        """
+        with self._session_conv_lock:
+            conversation = list(self._session_conversations.get(session_id, []))
+
+        if not conversation:
+            return
+
+        # Format conversation as interaction text
+        interaction_parts = []
+        for i, turn in enumerate(conversation):
+            interaction_parts.append(f"Turn {i+1}:")
+            interaction_parts.append(f"  User: {turn['user'][:500]}")
+            interaction_parts.append(f"  Assistant: {turn['assistant'][:500]}")
+        latest_interaction = "\n".join(interaction_parts)
+
+        # Get current per-session experience (for dedup in subsequent turns)
+        with self._session_experience_lock:
+            current_exp = self._session_experience.get(session_id, "No previous experience.")
+
+        # Build experience extraction prompt
+        exp_prompt = self._extraction_prompt_template.format(
+            PREVIOUS_EXPERIENCE=current_exp,
+            LATEST_EXPERIENCE=latest_interaction,
+        )
+
+        # Call PRM engine to generate experience
+        exp_text = await self._generate_experience_text(exp_prompt)
+        if not exp_text:
+            return
+
+        if "no new experience" in exp_text.lower():
+            logger.info("[OpenClaw-OEL] session=%s (per-session) no new experience", session_id)
+            return
+
+        parsed_items = self._parse_experience_items(exp_text)
+        if not parsed_items:
+            logger.info("[OpenClaw-OEL] session=%s (per-session) no valid items parsed", session_id)
+            return
+
+        # Store per-session (append within session, but never cross-session)
+        with self._session_experience_lock:
+            prev = self._session_experience.get(session_id, "No previous experience.")
+            if prev == "No previous experience.":
+                self._session_experience[session_id] = parsed_items
+            else:
+                self._session_experience[session_id] = prev + "\n" + parsed_items
+            self._session_experience[session_id] = self._truncate_experience(
+                self._session_experience[session_id], self._experience_max_tokens
+            )
+            exp_snapshot = self._session_experience[session_id]
+
+        new_items = len(parsed_items.strip().split("\n"))
+        logger.info(
+            "%s[OpenClaw-OEL] session=%s (per-session) extracted %d items, exp_len=%d chars%s",
+            _MAGENTA, session_id, new_items, len(exp_snapshot), _RESET,
+        )
+
     async def _extract_experience_from_session(self, session_id: str):
         """Extract experience items from a completed session and append to global experience."""
         with self._session_conv_lock:
@@ -866,7 +1013,7 @@ class OpenClawOELAPIServer:
             current_exp = self._experience_text
 
         # Build experience extraction prompt
-        exp_prompt = EXPERIENCE_UPDATE_PROMPT_V4.format(
+        exp_prompt = self._extraction_prompt_template.format(
             PREVIOUS_EXPERIENCE=current_exp if current_exp != "No previous experience." else "No previous experience.",
             LATEST_EXPERIENCE=latest_interaction,
         )
@@ -877,18 +1024,32 @@ class OpenClawOELAPIServer:
             logger.info("[OpenClaw-OEL] session=%s experience extraction returned empty", session_id)
             return
 
+        # V2 dedup: model may output "No new experience." if nothing novel
+        if "no new experience" in exp_text.lower():
+            logger.info("[OpenClaw-OEL] session=%s model reported no new experience, skipping", session_id)
+            return
+
         # Parse "- EXPERIENCE ITEM: ..." lines
         parsed_items = self._parse_experience_items(exp_text)
         if not parsed_items:
             logger.info("[OpenClaw-OEL] session=%s no valid experience items parsed", session_id)
             return
 
-        # Append to global experience
+        # Update global experience
         with self._experience_lock:
-            if self._experience_text == "No previous experience.":
+            if self._no_accumulate:
+                # No-accumulate mode: replace global experience with this session's extract only
                 self._experience_text = parsed_items
+                logger.info(
+                    "[OpenClaw-OEL] session=%s no-accumulate: replaced global experience (%d chars)",
+                    session_id, len(parsed_items),
+                )
             else:
-                self._experience_text = self._experience_text + "\n" + parsed_items
+                # Default: append to global experience
+                if self._experience_text == "No previous experience.":
+                    self._experience_text = parsed_items
+                else:
+                    self._experience_text = self._experience_text + "\n" + parsed_items
             self._experience_text = self._truncate_experience(
                 self._experience_text, self._experience_max_tokens
             )
@@ -1033,7 +1194,8 @@ class OpenClawOELAPIServer:
     async def _compute_teacher_topk_logprobs(
         self, input_ids: list[int], response_len: int
     ) -> tuple[list[list[float]], list[list[int]]]:
-        K = self.distill_topk
+        K = self._teacher_topk_request_size  # May be larger than distill_topk when topk_source=student
+        K_out = K  # Return all requested logprobs
         start_len = max(0, len(input_ids) - response_len)
         payload = {
             "input_ids": input_ids,
@@ -1194,7 +1356,7 @@ class OpenClawOELAPIServer:
         sample.teacher_log_probs = torch.tensor(teacher_log_probs, dtype=torch.float32)
 
         if self._use_topk_distillation:
-            K = self.distill_topk
+            K = self._teacher_topk_request_size  # May be > distill_topk when topk_source=student
             topk_lp = teacher_result.get("teacher_topk_log_probs") or []
             topk_idx = teacher_result.get("teacher_topk_indices") or []
             if len(topk_lp) > len(response_ids):
@@ -1233,7 +1395,7 @@ class OpenClawOELAPIServer:
         sample.teacher_log_probs = torch.tensor(turn_data["response_logprobs"], dtype=torch.float32)
 
         if self._use_topk_distillation:
-            K = self.distill_topk
+            K = self._teacher_topk_request_size
             sample.teacher_topk_log_probs = torch.zeros(len(response_ids), K, dtype=torch.float32)
             sample.teacher_topk_indices = torch.zeros(len(response_ids), K, dtype=torch.long)
 
@@ -1409,6 +1571,7 @@ class OpenClawOELAPIServer:
             f"  proxy {self.host}:{self.port} -> SGLang {self.args.sglang_router_ip}:{self.args.sglang_router_port}\n"
             f"  PRM/teacher {self._prm_url} (m={self._prm_m})\n"
             f"  experience max tokens: {self._experience_max_tokens}\n"
+            f"  no-accumulate (replace per session): {self._no_accumulate}\n"
             f"  multi-experience: {self._multi_experience}\n"
             f"  deploy save dir: {self._deploy_save_dir or '(none)'}\n"
             f"{'=' * 70}\n"
