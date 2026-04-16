@@ -12,28 +12,51 @@ without needing it in the prompt at inference time.
 
 ## Key Results
 
-5-method comparison on **Hard GSM8K** (36 problems, baseline accuracy <= 0.25), Qwen3-1.7B
-full-parameter, 40 training rounds, GPT-4o evaluator (5 votes), temperature=0:
+4-method comparison on **Hard GSM8K** (36 problems, baseline accuracy ≤ 0.25), Qwen3-1.7B
+full-parameter, 40 training rounds, GPT-4.1 evaluator (5 votes):
 
-| Rank | Method | Baseline | Peak Student | Final Student | Trend |
-|------|--------|----------|-------------|---------------|-------|
-| 1 | **OEL v2** | 0.315 | **0.460** | **0.460** | Late-stage surge |
-| 2 | Combined (GRPO+OPD) | 0.283 | 0.407 | 0.407 | Steady improvement |
-| 3 | OPD | 0.304 | 0.390 | 0.353 | Peaks then declines |
-| 4 | OEL v1 | 0.296 | 0.379 | 0.325 | Mid-late decline |
-| 5 | RL (GRPO) | 0.278 | 0.331 | 0.059 | Catastrophic collapse |
+| Rank | Method | Baseline | Peak Student | Δ | Teacher (stable?) |
+|------|--------|----------|-------------|---|-------------------|
+| 1 | **OPCD-Suc (Ours)** | 0.266 | **0.460** | **+0.194** | ✅ 0.56–0.70 |
+| 2 | OPCD-Pre | 0.296 | 0.447 | +0.151 | ✅ 0.52–0.71 |
+| 3 | OPCD | 0.283 | 0.428 | +0.145 | ✅ 0.50–0.72 |
+| 4 | SDFT/SDPO-style | 0.290 | 0.415 | +0.126 | ✅ 0.53–0.72 |
 
-![Step vs Score](scripts/step_vs_score.png)
+![4-Method Comparison](scripts/3method_comparison.png)
 
 **Key takeaways:**
-- **OEL v2 achieves the highest student score** (0.460), with a unique "late-stage surge" pattern (steps 19-23)
-- **Pure RL (GRPO) collapses catastrophically** — distillation is essential for stable personalization training
-- **v2 prompt vs v1**: +21% peak improvement, +42% final improvement — concrete do/don't rules >> abstract platitudes
-- By the end, **student surpasses teacher** (0.460 vs 0.279), meaning the student has fully internalized the experience
+- **OPCD-Suc achieves the best learning efficiency** (Δ=+0.194), because ALL turns benefit from complete session experience
+- **OPCD-Pre (per-turn extraction)** is second — early turns have weak/no experience, only late turns are effective
+- **All methods maintain stable teacher scores** (anti-forgetting), unlike co-training which collapses
+- OPCD-Suc's advantage: post-hoc extraction ensures even Turn 1 sees full-session experience
+
+**Naming convention:**
+- **SDFT/SDPO-style**: Per-turn distillation without persistent experience ([SDFT](https://arxiv.org/abs/2601.19897), [SDPO](https://arxiv.org/abs/2601.20802))
+- **OPCD**: On-Policy Context Distillation — cross-session experience accumulation ([arXiv: 2602.12275](https://arxiv.org/abs/2602.12275))
+- **OPCD-Pre**: OPCD + **before-the-fact** per-turn experience extraction (experience available during each turn)
+- **OPCD-Suc**: OPCD + **after-the-fact** successive extraction (experience extracted post-hoc from full session, then replayed)
+
+### OPCD-Suc (Successive) Mode
+
+Post-hoc experience extraction + teacher replay:
+1. **Phase 1**: Student generates all turns **without teacher** (no teacher overhead during inference)
+2. **Phase 2**: After session ends, extract ONE experience from the entire conversation
+3. **Phase 3**: Replay teacher evaluation on ALL turns with the complete experience
+4. Submit all samples to training queue
+
+```bash
+OPENCLAW_OEL_SESSION_EXPERIENCE=replay bash run_qwen3_1.7b_openclaw_oel_online.sh
+```
+
+Reproduce all 4 experiments:
+```bash
+bash scripts/reproduce_all.sh           # all 4 (~8 hours)
+bash scripts/reproduce_all.sh --only opcd-suc   # just OPCD-Suc
+```
 
 Regenerate the figure:
 ```bash
-python3 scripts/plot_step_vs_score.py
+python3 scripts/plot_3method_comparison.py
 ```
 
 ## How It Works
@@ -260,7 +283,7 @@ EXP_NAME=oel-consolidate-round1 \
 | `OPENCLAW_OEL_EXPERIENCE_PATH` | (none) | Path to experience file or experience_list.txt |
 | `OPENCLAW_OEL_MULTI_EXPERIENCE` | `0` | Enable multi-experience pool (random sampling) |
 | `OPENCLAW_OEL_NO_ACCUMULATE` | `0` | Replace (instead of append) global experience per session |
-| `OPENCLAW_OEL_SESSION_EXPERIENCE` | `0` | Per-session, per-turn experience extraction (no cross-session) |
+| `OPENCLAW_OEL_SESSION_EXPERIENCE` | `0` | `0`=OPCD (global accumulation), `1`=OPCD-Pre (per-session per-turn), `replay`=OPCD-Suc (post-hoc replay) |
 | `OPENCLAW_OEL_DEPLOY_SAVE_DIR` | (none) | Directory to save/load trajectories |
 | `OPENCLAW_OEL_TOPK_SOURCE` | `teacher` | Top-K selection source: `teacher` or `student` |
 | `OPENCLAW_UPDATE_PRM_WEIGHTS` | `0` | `0`=teacher frozen, `1`=teacher co-evolves with student |
@@ -380,9 +403,9 @@ EXP_NAME=oel-consolidate-round1 \
 | `run_qwen3_4b_openclaw_oel_deploy.sh` | OEL Phase 2: trajectory collection |
 | `run_qwen3_4b_openclaw_oel_consolidate.sh` | OEL Phase 3: consolidation training |
 | `run_oel_round.sh` | Multi-round iteration wrapper |
-| `scripts/plot_step_vs_score.py` | Generate step-vs-score comparison figure |
-| `results/5method_comparison/` | Key experiment result JSONs |
-| `results/experiences/` | Experience snapshots from training sessions |
+| `scripts/plot_3method_comparison.py` | Generate 4-method comparison figure (auto-detects results) |
+| `scripts/reproduce_all.sh` | One-click reproduction of all 4 experiments |
+| `eval/results/` | Experiment result JSONs (auto-created) |
 
 ## Hardware Requirements
 
