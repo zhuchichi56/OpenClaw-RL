@@ -116,38 +116,8 @@ cd slime
 **Combined (RL + OPD):**
 ```bash
 bash ../openclaw-combine/run_qwen3_4b_openclaw_combine.sh      # Qwen3
-bash ../openclaw-combine/run_qwen35_4b_openclaw_combine.sh     # Qwen3.5
 ```
 
-**Combined with LoRA** (parameter-efficient, fewer GPUs):
-```bash
-bash ../openclaw-combine/run_qwen3_4b_openclaw_combine_lora.sh     # Qwen3
-bash ../openclaw-combine/run_qwen35_4b_openclaw_combine_lora.sh    # Qwen3.5
-```
-
-**Binary RL:**
-```bash
-bash ../openclaw-rl/run_qwen3_4b_openclaw_rl.sh      # Qwen3
-bash ../openclaw-rl/run_qwen35_4b_openclaw_rl.sh     # Qwen3.5
-```
-
-**Binary RL with LoRA** (parameter-efficient, fewer GPUs):
-```bash
-bash ../openclaw-rl/run_qwen3_4b_openclaw_rl_lora.sh     # Qwen3
-bash ../openclaw-rl/run_qwen35_4b_openclaw_rl_lora.sh    # Qwen3.5
-```
-
-**On-Policy Distillation (OPD):**
-```bash
-bash ../openclaw-opd/run_qwen3_4b_openclaw_opd.sh      # Qwen3
-bash ../openclaw-opd/run_qwen35_4b_openclaw_opd.sh     # Qwen3.5
-```
-
-**OPD with LoRA** (parameter-efficient, fewer GPUs):
-```bash
-bash ../openclaw-opd/run_qwen3_4b_openclaw_opd_topk_lora.sh     # Qwen3
-bash ../openclaw-opd/run_qwen35_4b_openclaw_opd_topk_lora.sh    # Qwen3.5
-```
 
 > **Eval mode:** To enable evaluation logging with W&B, set `OPENCLAW_EVAL_MODE=1` and provide your W&B key via `WANDB_KEY` before launching. This is already the default in the OPD and Combine scripts.
 
@@ -179,6 +149,10 @@ This will:
 1. Write 36 GSM8K problems to `homework/0.txt` through `homework/35.txt` in the workspace.
 2. For each problem, run a multi-turn conversation where the student LLM asks the OpenClaw agent to solve it.
 3. Print a summary of how many problems were completed within the turn limit.
+4. Return a [results.txt](https://github.com/Gen-Verse/OpenClaw-RL/blob/main/openclaw-test/results.txt) which records the OpenClaw's first output in each session.
+
+
+
 
 ### Step 4: Run the Teacher Test
 
