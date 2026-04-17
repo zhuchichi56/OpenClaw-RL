@@ -67,7 +67,18 @@ OEL/OPCD-style on **Hard GSM8K**, Qwen3-1.7B, 40 rounds:
 
 Reproduce:
 ```bash
-bash scripts/reproduce_all.sh           # all experiments (~8 hours)
+# 1. Start training backend (inside Docker container with 4x H100)
+bash run_qwen3_1.7b_openclaw_oel_online.sh
+
+# 2. Run evaluation (in a separate terminal)
+cd eval
+export OPENAI_API_KEY="sk-..."
+python3 gsm8k_personal_agent.py \
+    --method oel \
+    --training-rounds 40 \
+    --eval-every 2 \
+    --problem-file ../data/hard_problems_train.json \
+    --eval-problem-file ../data/hard_problems_eval.json
 ```
 
 ## File Layout
@@ -75,7 +86,7 @@ bash scripts/reproduce_all.sh           # all experiments (~8 hours)
 ```text
 openclaw-oel/
 ├── README.md
-├── train_async.py                               # Async training entry point
+├── train_async.py                               # Async training entry point (symlink → ../slime/)
 ├── openclaw_oel_api_server.py                   # API server: experience extraction + teacher query + sample submission
 ├── openclaw_oel_rollout.py                      # Rollout bridge to SLIME trainer
 ├── oel_distillation_loss.py                     # Top-K reverse KL loss (Megatron + FSDP)
