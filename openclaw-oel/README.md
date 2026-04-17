@@ -40,6 +40,41 @@ Key args:
 --entropy-coef 0.00
 ```
 
+## Prerequisites
+
+| Requirement | Detail |
+|-------------|--------|
+| **Docker image** | `slimerl/slime:latest` ([DockerHub](https://hub.docker.com/r/slimerl/slime)) — includes SGLang, Megatron-LM, Flash-Attention, Ray |
+| **GPUs** | 4x NVIDIA H100 80GB (or equivalent) |
+| **Model weights** | [Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B) — download to `models/Qwen3-1.7B` |
+| **OpenAI API key** | For GPT-4.1 evaluation — set `OPENAI_API_KEY` env var |
+
+```bash
+# 1. Pull image & create container
+docker run -d --name openclaw-slime --gpus all --network host --shm-size 64g \
+  -v $(pwd)/models:/workspace/models \
+  -v $(pwd):/workspace/OpenClaw-RL \
+  slimerl/slime:latest sleep infinity
+
+# 2. Download model weights (if not already present)
+huggingface-cli download Qwen/Qwen3-1.7B --local-dir models/Qwen3-1.7B
+
+# 3. Start training (inside container)
+docker exec -it openclaw-slime bash
+cd /workspace/OpenClaw-RL/openclaw-oel
+bash run_qwen3_1.7b_openclaw_oel_online.sh
+
+# 4. Run evaluation (separate terminal, host or container)
+cd openclaw-oel/eval
+export OPENAI_API_KEY="sk-..."
+python3 gsm8k_personal_agent.py \
+    --method oel \
+    --training-rounds 40 \
+    --eval-every 2 \
+    --problem-file ../data/hard_problems_train.json \
+    --eval-problem-file ../data/hard_problems_eval.json
+```
+
 ## Experiment Setting
 
 | Setting | Value |
@@ -65,21 +100,7 @@ OEL/OPCD-style on **Hard GSM8K**, Qwen3-1.7B, 40 rounds:
 | Peak Student | **0.460** (+0.194) |
 | Teacher | 0.56–0.70 (stable, no forgetting) |
 
-Reproduce:
-```bash
-# 1. Start training backend (inside Docker container with 4x H100)
-bash run_qwen3_1.7b_openclaw_oel_online.sh
-
-# 2. Run evaluation (in a separate terminal)
-cd eval
-export OPENAI_API_KEY="sk-..."
-python3 gsm8k_personal_agent.py \
-    --method oel \
-    --training-rounds 40 \
-    --eval-every 2 \
-    --problem-file ../data/hard_problems_train.json \
-    --eval-problem-file ../data/hard_problems_eval.json
-```
+Reproduce: see [Prerequisites](#prerequisites) above.
 
 ## File Layout
 
