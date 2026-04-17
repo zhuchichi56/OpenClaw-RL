@@ -380,7 +380,7 @@ class OpenClawOELAPIServer:
         # entire conversation and then replay teacher evaluation on every turn with
         # that experience.  This ensures all turns (including turn 1) benefit from
         # the full-session experience.
-        self._replay_mode = _ses_exp == "replay"
+        self._replay_mode = _ses_exp == "2"
         if self._replay_mode:
             logger.info("[OpenClaw-OEL] REPLAY mode ENABLED: post-hoc experience extraction + teacher replay")
 
@@ -526,7 +526,7 @@ class OpenClawOELAPIServer:
                 if exp is not None:
                     return exp
             # Fall through to global experience if no per-session entry
-            if self._session_experience_mode or self._replay_mode:
+            if self._session_experience_mode:
                 return "No previous experience."
         if self._multi_experience:
             with self._experience_pool_lock:
@@ -646,15 +646,17 @@ class OpenClawOELAPIServer:
             if prev_turn_num > 0 and messages:
                 self._flush_pending_record(session_id, messages[-1])
 
-            # Previous turn now has next_state → fire teacher task or store for replay
-            if prev_turn_num > 0 and messages:
+            # Previous turn now has next_state → fire teacher task
+            # In replay mode, defer ALL teacher evaluation to session end.
+            if prev_turn_num > 0 and messages and not self._replay_mode:
                 prev_turn_data = self._pending_turn_data.get(session_id, {}).get(prev_turn_num)
                 if prev_turn_data is not None:
-                    if self._replay_mode:
-                        # Defer teacher evaluation to session end; just store next_state
-                        prev_turn_data["_replay_next_state"] = messages[-1]
-                    else:
-                        self._fire_teacher_task(session_id, prev_turn_num, prev_turn_data, messages[-1])
+                    self._fire_teacher_task(session_id, prev_turn_num, prev_turn_data, messages[-1])
+            # In replay mode, store next_state for later replay
+            if prev_turn_num > 0 and messages and self._replay_mode:
+                prev_turn_data = self._pending_turn_data.get(session_id, {}).get(prev_turn_num)
+                if prev_turn_data is not None:
+                    prev_turn_data["_replay_next_state"] = messages[-1]
 
             # Process current turn
             response_msg = dict(assistant_msg)
@@ -904,37 +906,6 @@ class OpenClawOELAPIServer:
             self._oel_tasks.setdefault(session_id, {})[turn_num] = task
             td["has_next_state"] = True
 
-    async def _format_and_extract_experience(self, conversation: list[dict]) -> str:
-        """Format a conversation and extract experience items via PRM.
-
-        Returns parsed experience text, or ``"No previous experience."`` if
-        extraction fails or yields nothing new.
-        """
-        if not conversation or not self._prm_enabled:
-            return "No previous experience."
-
-        interaction_parts = []
-        for i, turn in enumerate(conversation):
-            interaction_parts.append(f"Turn {i+1}:")
-            interaction_parts.append(f"  User: {turn['user'][:500]}")
-            interaction_parts.append(f"  Assistant: {turn['assistant'][:500]}")
-        latest_interaction = "\n".join(interaction_parts)
-
-        with self._experience_lock:
-            current_exp = self._experience_text
-
-        exp_prompt = self._extraction_prompt_template.format(
-            PREVIOUS_EXPERIENCE=current_exp if current_exp != "No previous experience." else "No previous experience.",
-            LATEST_EXPERIENCE=latest_interaction,
-        )
-
-        exp_text = await self._generate_experience_text(exp_prompt)
-        if not exp_text or "no new experience" in exp_text.lower():
-            return "No previous experience."
-
-        parsed = self._parse_experience_items(exp_text)
-        return parsed if parsed else "No previous experience."
-
     async def _replay_session(self, session_id: str):
         """Replay mode: extract experience from the full session, then run teacher on every turn.
 
@@ -955,16 +926,35 @@ class OpenClawOELAPIServer:
             _MAGENTA, session_id, len(turn_nums), _RESET,
         )
 
-        # Step 1: extract experience from complete conversation
+        # Step 1: extract experience from complete conversation (reuse existing method)
         with self._session_conv_lock:
             conversation = self._session_conversations.get(session_id, [])
 
-        experience = await self._format_and_extract_experience(conversation)
-        if experience != "No previous experience.":
-            logger.info(
-                "%s[OpenClaw-OEL] REPLAY session=%s extracted experience: %d chars%s",
-                _MAGENTA, session_id, len(experience), _RESET,
+        experience = "No previous experience."
+        if conversation and self._prm_enabled:
+            interaction_parts = []
+            for i, turn in enumerate(conversation):
+                interaction_parts.append(f"Turn {i+1}:")
+                interaction_parts.append(f"  User: {turn['user'][:500]}")
+                interaction_parts.append(f"  Assistant: {turn['assistant'][:500]}")
+            latest_interaction = "\n".join(interaction_parts)
+
+            with self._experience_lock:
+                current_exp = self._experience_text
+
+            exp_prompt = self._extraction_prompt_template.format(
+                PREVIOUS_EXPERIENCE=current_exp if current_exp != "No previous experience." else "No previous experience.",
+                LATEST_EXPERIENCE=latest_interaction,
             )
+            exp_text = await self._generate_experience_text(exp_prompt)
+            if exp_text and "no new experience" not in exp_text.lower():
+                parsed = self._parse_experience_items(exp_text)
+                if parsed:
+                    experience = parsed
+                    logger.info(
+                        "%s[OpenClaw-OEL] REPLAY session=%s extracted experience: %d chars%s",
+                        _MAGENTA, session_id, len(experience), _RESET,
+                    )
 
         # Clean up conversation tracking
         with self._session_conv_lock:
@@ -1122,13 +1112,42 @@ class OpenClawOELAPIServer:
         with self._session_conv_lock:
             conversation = self._session_conversations.pop(session_id, [])
 
-        if not conversation:
+        if not conversation or len(conversation) < 1:
             logger.info("[OpenClaw-OEL] session=%s no conversation to extract experience from", session_id)
             return
 
-        parsed_items = await self._format_and_extract_experience(conversation)
-        if parsed_items == "No previous experience.":
-            logger.info("[OpenClaw-OEL] session=%s experience extraction yielded nothing new", session_id)
+        # Format conversation as interaction text
+        interaction_parts = []
+        for i, turn in enumerate(conversation):
+            interaction_parts.append(f"Turn {i+1}:")
+            interaction_parts.append(f"  User: {turn['user'][:500]}")
+            interaction_parts.append(f"  Assistant: {turn['assistant'][:500]}")
+        latest_interaction = "\n".join(interaction_parts)
+
+        with self._experience_lock:
+            current_exp = self._experience_text
+
+        # Build experience extraction prompt
+        exp_prompt = self._extraction_prompt_template.format(
+            PREVIOUS_EXPERIENCE=current_exp if current_exp != "No previous experience." else "No previous experience.",
+            LATEST_EXPERIENCE=latest_interaction,
+        )
+
+        # Call PRM engine to generate experience
+        exp_text = await self._generate_experience_text(exp_prompt)
+        if not exp_text:
+            logger.info("[OpenClaw-OEL] session=%s experience extraction returned empty", session_id)
+            return
+
+        # V2 dedup: model may output "No new experience." if nothing novel
+        if "no new experience" in exp_text.lower():
+            logger.info("[OpenClaw-OEL] session=%s model reported no new experience, skipping", session_id)
+            return
+
+        # Parse "- EXPERIENCE ITEM: ..." lines
+        parsed_items = self._parse_experience_items(exp_text)
+        if not parsed_items:
+            logger.info("[OpenClaw-OEL] session=%s no valid experience items parsed", session_id)
             return
 
         # Update global experience

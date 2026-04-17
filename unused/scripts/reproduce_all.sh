@@ -182,7 +182,7 @@ if [[ "${ONLY}" == "all" || "${ONLY}" == "opcd-suc" ]]; then
     run_experiment "opcd_suc" \
         "${OEL_DIR}" "run_qwen3_1.7b_openclaw_oel_online.sh" \
         "${OEL_DIR}/eval" "oel" \
-        "OPENCLAW_OEL_SESSION_EXPERIENCE=replay"
+        "OPENCLAW_OEL_SESSION_EXPERIENCE=2"
 fi
 
 # Stop training at the end

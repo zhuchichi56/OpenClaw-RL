@@ -105,7 +105,6 @@ def _extract_boxed_score(text: str) -> float | None:
 # ---------------------------------------------------------------------------
 # Core evaluation functions
 # ---------------------------------------------------------------------------
-API_VERSION = "2025-03-01-preview"
 
 
 def _evaluate_once(
@@ -117,7 +116,7 @@ def _evaluate_once(
     for attempt in range(max_retries):
         try:
             client, model = get_client(
-                model_name=evaluator_model, api_version=API_VERSION
+                model_name=evaluator_model
             )
             resp = client.responses.create(
                 model=model,

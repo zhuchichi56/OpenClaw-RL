@@ -38,7 +38,6 @@ from personalization_evaluator import (
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-API_VERSION = "2025-03-01-preview"
 OPENCLAW_RL_BASE = "http://localhost:30000"
 OPENCLAW_RL_CHAT = f"{OPENCLAW_RL_BASE}/v1/chat/completions"
 

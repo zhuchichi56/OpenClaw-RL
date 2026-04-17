@@ -1,11 +1,13 @@
 #!/bin/bash
-# OpenClaw OEL — Qwen3-1.7B Full-Parameter (No LoRA), Online Mode
+# OpenClaw OEL — Online Mode (OPCD-compatible), LoRA, 4 GPU
 #
-# Aligned with paper:
-#   - LR: 1e-5
-#   - rollout-batch-size: 16
-#   - KL coefficient: 0 (default)
-#   - Full-parameter training (no LoRA)
+# Continuous online training with live experience accumulation.
+# Functionally equivalent to openclaw-opcd but under the unified OEL framework.
+#
+# Architecture:
+#   - 2 GPUs for Actor (FSDP)
+#   - 1 GPU for Rollout (SGLang)
+#   - 1 GPU for PRM/Teacher (experience extraction + teacher logprobs)
 
 pkill -9 sglang
 sleep 3
@@ -40,20 +42,17 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 SLIME_ROOT="$(cd -- "${SCRIPT_DIR}/../slime" &>/dev/null && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." &>/dev/null && pwd)"
 
-# Source model architecture args for Megatron backend
-source "${SLIME_ROOT}/scripts/models/qwen3-1.7B.sh"
-
-HF_CKPT=${HF_CKPT:-${REPO_ROOT}/models/Qwen3-1.7B}
+HF_CKPT=${HF_CKPT:-${REPO_ROOT}/models/Qwen3-4B}
 REF_LOAD=${REF_LOAD:-${HF_CKPT}}
-SAVE_CKPT=${SAVE_CKPT:-/workspace/OpenClaw-RL/saves/openclaw/qwen3-1.7b-oel}
+SAVE_CKPT=${SAVE_CKPT:-${REPO_ROOT}/ckpt/qwen3-4b-openclaw-oel-online-lora}
 PRM_MODEL_PATH=${PRM_MODEL_PATH:-${HF_CKPT}}
 
 export SGLANG_API_KEY="${SGLANG_API_KEY}"
-export SERVED_MODEL_NAME="qwen3-1.7b"
+export SERVED_MODEL_NAME="qwen3-4b"
 export HOST="0.0.0.0"
 export PORT="30000"
 export OPENCLAW_RECORD_ENABLED="${OPENCLAW_RECORD_ENABLED:-1}"
-export OPENCLAW_RECORD_FILE="${SCRIPT_DIR}/results/qwen3_1.7b_oel_online_record.jsonl"
+export OPENCLAW_RECORD_FILE="${SCRIPT_DIR}/results/qwen3_4b_oel_online_record.jsonl"
 export TP="${TP:-1}"
 export CONTEXT_LENGTH="32768"
 export MEM_FRACTION_STATIC="0.85"
@@ -65,67 +64,37 @@ export OPENCLAW_OPD_TEACHER_LP_MAX_CONCURRENCY="${OPENCLAW_OPD_TEACHER_LP_MAX_CO
 # OEL settings
 export OPENCLAW_OEL_MODE="online"
 export OPENCLAW_OEL_EXPERIENCE_MAX_LENGTH="${OPENCLAW_OEL_EXPERIENCE_MAX_LENGTH:-2048}"
-# Extraction prompt: "v1" (general), "v2" (specific + dedup, default), or a file path
-export OPENCLAW_OEL_EXTRACTION_PROMPT="${OPENCLAW_OEL_EXTRACTION_PROMPT:-v2}"
-# Session experience mode:
-#   "0" — cross-session accumulation (experience persists across sessions)
-#   "1" — single-session, pre-extraction (extract per-turn within session, no cross-session)
-#   "2" — single-session, post-extraction (extract from full session after it ends, replay teacher on all turns)
-export OPENCLAW_OEL_SESSION_EXPERIENCE="${OPENCLAW_OEL_SESSION_EXPERIENCE:-2}"
 
-# --- Configurable: teacher (PRM) weight update ---
-# OPENCLAW_UPDATE_PRM_WEIGHTS: "0" (frozen, default) or "1" (update teacher with student weights)
-#   0 → teacher/PRM keeps initial checkpoint forever (standard OEL)
-#   1 → teacher/PRM receives updated weights after each training step (co-evolving)
-export OPENCLAW_UPDATE_PRM_WEIGHTS="${OPENCLAW_UPDATE_PRM_WEIGHTS:-0}"
-
-# --- Configurable: multi-step training ---
-# TRAIN_STEPS: number of gradient steps per rollout (default: 1)
-#   TRAIN_STEPS=1  → collect 16 samples, train 1 step, then rollout again
-#   TRAIN_STEPS=10 → collect 160 samples, train 10 steps, then rollout again
-TRAIN_STEPS=${TRAIN_STEPS:-1}
-BASE_BATCH_SIZE=${BASE_BATCH_SIZE:-16}
-ROLLOUT_BS=$((TRAIN_STEPS * BASE_BATCH_SIZE))
-
-# --- Configurable: top-K selection source ---
-# TOPK_SOURCE: "teacher" (default) or "student"
-#   teacher → top-K tokens selected from teacher's (experience-augmented) distribution
-#   student → top-K tokens selected from student's (bare prompt) distribution
-export OPENCLAW_OEL_TOPK_SOURCE="${TOPK_SOURCE:-teacher}"
-
-echo "=== OEL Config ==="
-echo "  TRAIN_STEPS=${TRAIN_STEPS} (rollout_batch_size=${ROLLOUT_BS})"
-echo "  TOPK_SOURCE=${OPENCLAW_OEL_TOPK_SOURCE}"
-echo "  UPDATE_PRM_WEIGHTS=${OPENCLAW_UPDATE_PRM_WEIGHTS}"
-echo "=================="
+# Optional: load pre-existing experience from a previous OEL round
+# export OPENCLAW_OEL_EXPERIENCE_PATH="/tmp/oel-round1/experience_list.txt"
+# export OPENCLAW_OEL_MULTI_EXPERIENCE="1"
 
 CKPT_ARGS=(
    --hf-checkpoint "${HF_CKPT}"
    --ref-load "${REF_LOAD}"
    --save "${SAVE_CKPT}"
-   --save-interval 5
-   --megatron-to-hf-mode bridge
+   --save-interval 1
 )
 
 ROLLOUT_ARGS=(
    --disable-rollout-global-dataset
    --rollout-function-path openclaw_oel_rollout.generate_rollout_openclaw_oel
 
-   --num-rollout 100
-   --rollout-batch-size "${ROLLOUT_BS}"
+   --num-rollout 100000000
+   --rollout-batch-size 4
    --n-samples-per-prompt 1
    --rollout-max-response-len 8192
    --rollout-max-context-len 32768
    --rollout-temperature 0.6
    --reward-key score
 
-   --num-steps-per-rollout "${TRAIN_STEPS}"
+   --num-steps-per-rollout 1
 )
 
 PERF_ARGS=(
    --use-dynamic-batch-size
-   --max-tokens-per-gpu "${MAX_TOKENS_PER_GPU:-4096}"
-   # --gradient-checkpointing  # FSDP only; Megatron uses recompute-* args
+   --max-tokens-per-gpu "${MAX_TOKENS_PER_GPU:-8192}"
+   --gradient-checkpointing
 )
 
 OEL_ARGS=(
@@ -134,19 +103,18 @@ OEL_ARGS=(
    --distill-topk 50
    --disable-compute-advantages-and-returns
    --disable-rewards-normalization
-   --entropy-coef 0.00
+   --entropy-coef 0.01
 )
 
 OPTIMIZER_ARGS=(
    --optimizer adam
-   --lr ${OPENCLAW_LR:-1e-5}
+   --lr 1e-6
    --lr-decay-style constant
    --weight-decay 0.1
    --adam-beta1 0.9
    --adam-beta2 0.98
 )
 
-# LoRA args preserved but NOT used (full-parameter training)
 LORA_ARGS=(
    --use-lora
    --lora-rank 16
@@ -185,26 +153,19 @@ ray start --head --node-ip-address "${MASTER_ADDR}" --num-gpus "${NUM_GPUS}" --d
 
 RUNTIME_ENV_JSON="{
   \"env_vars\": {
-    \"PYTHONPATH\": \"${REPO_ROOT}/Megatron-LM/:${SCRIPT_DIR}:${SLIME_ROOT}\",
-    \"CUDA_DEVICE_MAX_CONNECTIONS\": \"1\",
-    \"OPENCLAW_OEL_TOPK_SOURCE\": \"${OPENCLAW_OEL_TOPK_SOURCE}\",
-    \"OPENCLAW_UPDATE_PRM_WEIGHTS\": \"${OPENCLAW_UPDATE_PRM_WEIGHTS}\",
-    \"OPENCLAW_OEL_EXTRACTION_PROMPT\": \"${OPENCLAW_OEL_EXTRACTION_PROMPT}\",
-    \"OPENCLAW_OEL_SESSION_EXPERIENCE\": \"${OPENCLAW_OEL_SESSION_EXPERIENCE}\"
+    \"PYTHONPATH\": \"${SCRIPT_DIR}:${SLIME_ROOT}\",
+    \"CUDA_DEVICE_MAX_CONNECTIONS\": \"1\"
   }
 }"
 
-cd "${SCRIPT_DIR}"
 ray job submit --address="http://127.0.0.1:8265" \
-   --working-dir="${SCRIPT_DIR}" \
    --runtime-env-json="${RUNTIME_ENV_JSON}" \
    -- python3 train_async.py \
-   --train-backend megatron \
+   --train-backend fsdp \
    --actor-num-nodes 1 \
    --actor-num-gpus-per-node "${ACTOR_GPUS}" \
    --rollout-num-gpus "${ROLLOUT_GPUS}" \
    --num-gpus-per-node "${NUM_GPUS}" \
-   ${MODEL_ARGS[@]} \
    ${CKPT_ARGS[@]} \
    ${ROLLOUT_ARGS[@]} \
    ${OPTIMIZER_ARGS[@]} \
@@ -213,5 +174,5 @@ ray job submit --address="http://127.0.0.1:8265" \
    ${EVAL_ARGS[@]} \
    ${SGLANG_ARGS[@]} \
    ${CUSTOM_ARGS[@]} \
-   ${PRM_ARGS[@]}
-   # ${LORA_ARGS[@]}  # Uncomment for LoRA training
+   ${PRM_ARGS[@]} \
+   ${LORA_ARGS[@]}

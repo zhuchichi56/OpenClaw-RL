@@ -45,7 +45,6 @@ from personalization_evaluator import (
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-API_VERSION = "2025-03-01-preview"
 OPENCLAW_RL_BASE = "http://localhost:30000"
 OPENCLAW_RL_CHAT = f"{OPENCLAW_RL_BASE}/v1/chat/completions"
 
@@ -195,7 +194,7 @@ def call_gpt(
 ) -> str:
     """Call Azure GPT model. If conversation is provided, use it instead of system+user."""
     try:
-        client, model = get_client(model_name=model_name, api_version=API_VERSION)
+        client, model = get_client(model_name=model_name)
         if conversation is not None:
             msgs = conversation
         else:
