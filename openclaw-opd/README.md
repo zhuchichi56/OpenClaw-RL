@@ -84,12 +84,24 @@ Equivalent key args:
 ```text
 openclaw-opd/
 ├── README.md
-├── run_qwen3_4b_openclaw_opd.sh                # Token-level OPD (Qwen3)
-├── run_qwen35_4b_openclaw_opd.sh               # Token-level OPD (Qwen3.5)
-├── run_qwen3_4b_openclaw_opd_topk.sh           # Top-K (Qwen3)
-├── run_qwen35_4b_openclaw_opd_topk.sh          # Top-K (Qwen3.5)
-├── topk_distillation_loss.py                    # Reverse-KL top-K loss (external custom loss)
+├── train_async.py                               # Async training entry point
 ├── openclaw_opd_api_server.py                   # Async judge + teacher query + sample submission
 ├── openclaw_opd_rollout.py                      # Rollout bridge to SLIME trainer
-└── results/                                     # Runtime records (auto-created)
+├── topk_distillation_loss.py                    # Reverse-KL top-K loss (external custom loss)
+├── run_qwen3_1.7b_openclaw_opd_topk.sh         # Top-K OPD (Qwen3-1.7B, paper default)
+├── run_qwen3_4b_openclaw_opd.sh                # Token-level OPD (Qwen3-4B)
+├── run_qwen3_4b_openclaw_opd_topk.sh           # Top-K (Qwen3-4B)
+├── run_qwen3_4b_openclaw_opd_topk_lora.sh      # Top-K + LoRA (Qwen3-4B)
+├── run_qwen35_4b_openclaw_opd.sh               # Token-level OPD (Qwen3.5-4B)
+├── run_qwen35_4b_openclaw_opd_topk.sh          # Top-K (Qwen3.5-4B)
+├── run_qwen35_4b_openclaw_opd_topk_lora.sh     # Top-K + LoRA (Qwen3.5-4B)
+├── data/
+│   ├── hard_problems_train.json                 # 36 hard GSM8K problems for training
+│   └── hard_problems_eval.json                  # 36 hard GSM8K problems for evaluation
+└── eval/
+    ├── gsm8k_personal_agent.py                  # Experiment runner (training + evaluation loop)
+    ├── personalization_evaluator.py             # GPT-4.1-based score evaluator
+    ├── openai_api.py                            # OpenAI API client (configure via OPENAI_API_KEY)
+    ├── select_hard_problems.py                  # Hard problem selection (requires full GSM8K)
+    └── results/                                 # Experiment results (JSON, auto-created)
 ```

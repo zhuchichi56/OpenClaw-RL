@@ -53,9 +53,24 @@ Key args:
 --entropy-coef 0.00
 ```
 
+## Experiment Setting
+
+| Setting | Value |
+|---------|-------|
+| **Model** | Qwen3-1.7B (full-parameter, Megatron backend) |
+| **Dataset** | Hard GSM8K: 36 train + 36 eval problems (baseline accuracy <= 0.25) |
+| **Training rounds** | 40 |
+| **Rollout batch size** | 16 |
+| **Learning rate** | 1e-5 (constant) |
+| **Top-K** | 50 (teacher distribution) |
+| **Experience max length** | 2048 tokens |
+| **Extraction prompt** | v2 (concrete rules + dedup) |
+| **Evaluator** | GPT-4.1 (5-vote majority) |
+| **Hardware** | 4x H100 80GB (actor=2, rollout=1, PRM=1) |
+
 ## Key Results
 
-Comparison on **Hard GSM8K** (36 problems, baseline accuracy <= 0.25), Qwen3-1.7B full-parameter, 40 training rounds, GPT-4.1 evaluator:
+Comparison on **Hard GSM8K**, Qwen3-1.7B, 40 rounds:
 
 | Method | Baseline | Peak Student | Delta | Teacher (stable?) |
 |--------|----------|-------------|-------|-------------------|
@@ -79,9 +94,7 @@ openclaw-oel/
 ├── openclaw_oel_api_server.py                   # API server: experience extraction + teacher query + sample submission
 ├── openclaw_oel_rollout.py                      # Rollout bridge to SLIME trainer
 ├── oel_distillation_loss.py                     # Top-K reverse KL loss (Megatron + FSDP)
-├── run_qwen3_1.7b_openclaw_oel_online.sh        # 1.7B online (paper default)
-├── run_qwen3_4b_openclaw_oel_online.sh          # 4B online, FSDP, LoRA
-├── run_qwen3_4b_openclaw_oel_online_megatron.sh # 4B online, Megatron, full-param
+├── run_qwen3_1.7b_openclaw_oel_online.sh        # Training script (paper default)
 ├── scripts/
 │   ├── reproduce_all.sh                         # One-click reproduction of all experiments
 │   └── plot_3method_comparison.py               # Generate comparison figure
@@ -91,7 +104,7 @@ openclaw-oel/
 └── eval/
     ├── gsm8k_personal_agent.py                  # Experiment runner (training + evaluation loop)
     ├── personalization_evaluator.py             # GPT-4.1-based score evaluator
-    ├── run_ms_api.py                            # Azure OpenAI API client
+    ├── openai_api.py                            # OpenAI API client (configure via OPENAI_API_KEY)
     ├── select_hard_problems.py                  # Hard problem selection (requires full GSM8K)
     └── results/                                 # Experiment results (JSON, auto-created)
 ```

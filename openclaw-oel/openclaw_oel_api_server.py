@@ -369,11 +369,20 @@ class OpenClawOELAPIServer:
 
         # Per-session experience mode: experience is extracted per-turn within a session
         # and NOT accumulated across sessions. Each session starts fresh.
-        self._session_experience_mode = os.getenv("OPENCLAW_OEL_SESSION_EXPERIENCE", "0") == "1"
+        _ses_exp = os.getenv("OPENCLAW_OEL_SESSION_EXPERIENCE", "0").strip().lower()
+        self._session_experience_mode = _ses_exp == "1"
         self._session_experience: dict[str, str] = {}  # session_id -> experience text
         self._session_experience_lock = threading.Lock()
         if self._session_experience_mode:
             logger.info("[OpenClaw-OEL] session-experience mode ENABLED: per-session, per-turn extraction, no cross-session accumulation")
+
+        # Replay mode: after a session completes, extract ONE experience from the
+        # entire conversation and then replay teacher evaluation on every turn with
+        # that experience.  This ensures all turns (including turn 1) benefit from
+        # the full-session experience.
+        self._replay_mode = _ses_exp == "replay"
+        if self._replay_mode:
+            logger.info("[OpenClaw-OEL] REPLAY mode ENABLED: post-hoc experience extraction + teacher replay")
 
         # Multi-experience pool (OEL consolidate mode)
         self._multi_experience = os.getenv("OPENCLAW_OEL_MULTI_EXPERIENCE", "0") == "1"
@@ -511,9 +520,14 @@ class OpenClawOELAPIServer:
         In multi-experience mode (consolidate), randomly samples from the pool.
         In single-experience mode (online), returns the current accumulated experience.
         """
-        if self._session_experience_mode and session_id:
+        if (self._session_experience_mode or self._replay_mode) and session_id:
             with self._session_experience_lock:
-                return self._session_experience.get(session_id, "No previous experience.")
+                exp = self._session_experience.get(session_id)
+                if exp is not None:
+                    return exp
+            # Fall through to global experience if no per-session entry
+            if self._session_experience_mode or self._replay_mode:
+                return "No previous experience."
         if self._multi_experience:
             with self._experience_pool_lock:
                 if self._experience_pool:
@@ -632,11 +646,15 @@ class OpenClawOELAPIServer:
             if prev_turn_num > 0 and messages:
                 self._flush_pending_record(session_id, messages[-1])
 
-            # Previous turn now has next_state → fire teacher task
+            # Previous turn now has next_state → fire teacher task or store for replay
             if prev_turn_num > 0 and messages:
                 prev_turn_data = self._pending_turn_data.get(session_id, {}).get(prev_turn_num)
                 if prev_turn_data is not None:
-                    self._fire_teacher_task(session_id, prev_turn_num, prev_turn_data, messages[-1])
+                    if self._replay_mode:
+                        # Defer teacher evaluation to session end; just store next_state
+                        prev_turn_data["_replay_next_state"] = messages[-1]
+                    else:
+                        self._fire_teacher_task(session_id, prev_turn_num, prev_turn_data, messages[-1])
 
             # Process current turn
             response_msg = dict(assistant_msg)
@@ -702,25 +720,30 @@ class OpenClawOELAPIServer:
 
         if session_done:
             self._flush_pending_record(session_id, None)
-            # Submit last turn directly
-            self._finalize_last_turn(session_id)
-            if self._mode not in (self.MODE_EXTRACT, self.MODE_DEPLOY):
-                self._maybe_submit_ready_samples(session_id, force_drop_without_next_state=True)
 
-            # Save session trajectory (for deploy and extract modes)
-            if self._deploy_save_dir:
-                self._save_session_trajectory(session_id)
+            if self._replay_mode:
+                # Replay mode: extract experience from whole session, then replay teacher on all turns
+                self._safe_create_task(self._replay_session(session_id))
+            else:
+                # Normal mode: finalize last turn and submit
+                self._finalize_last_turn(session_id)
+                if self._mode not in (self.MODE_EXTRACT, self.MODE_DEPLOY):
+                    self._maybe_submit_ready_samples(session_id, force_drop_without_next_state=True)
 
-            # Trigger experience extraction (online and extract modes)
-            # In session-experience mode, extraction already happens per-turn; skip global accumulation
-            if self._mode in (self.MODE_ONLINE, self.MODE_EXTRACT) and not self._session_experience_mode:
-                self._safe_create_task(self._extract_experience_from_session(session_id))
+                # Save session trajectory (for deploy and extract modes)
+                if self._deploy_save_dir:
+                    self._save_session_trajectory(session_id)
 
-            # Clean up per-session experience
-            if self._session_experience_mode:
-                with self._session_experience_lock:
-                    self._session_experience.pop(session_id, None)
-                logger.info("[OpenClaw-OEL] session=%s per-session experience cleared", session_id)
+                # Trigger experience extraction (online and extract modes)
+                # In session-experience mode, extraction already happens per-turn; skip global accumulation
+                if self._mode in (self.MODE_ONLINE, self.MODE_EXTRACT) and not self._session_experience_mode:
+                    self._safe_create_task(self._extract_experience_from_session(session_id))
+
+                # Clean up per-session experience
+                if self._session_experience_mode:
+                    with self._session_experience_lock:
+                        self._session_experience.pop(session_id, None)
+                    logger.info("[OpenClaw-OEL] session=%s per-session experience cleared", session_id)
 
             self._turn_counts.pop(session_id, None)
             logger.info("[OpenClaw-OEL] session=%s done -> cleaned up (mode=%s)", session_id, self._mode)
@@ -881,6 +904,108 @@ class OpenClawOELAPIServer:
             self._oel_tasks.setdefault(session_id, {})[turn_num] = task
             td["has_next_state"] = True
 
+    async def _format_and_extract_experience(self, conversation: list[dict]) -> str:
+        """Format a conversation and extract experience items via PRM.
+
+        Returns parsed experience text, or ``"No previous experience."`` if
+        extraction fails or yields nothing new.
+        """
+        if not conversation or not self._prm_enabled:
+            return "No previous experience."
+
+        interaction_parts = []
+        for i, turn in enumerate(conversation):
+            interaction_parts.append(f"Turn {i+1}:")
+            interaction_parts.append(f"  User: {turn['user'][:500]}")
+            interaction_parts.append(f"  Assistant: {turn['assistant'][:500]}")
+        latest_interaction = "\n".join(interaction_parts)
+
+        with self._experience_lock:
+            current_exp = self._experience_text
+
+        exp_prompt = self._extraction_prompt_template.format(
+            PREVIOUS_EXPERIENCE=current_exp if current_exp != "No previous experience." else "No previous experience.",
+            LATEST_EXPERIENCE=latest_interaction,
+        )
+
+        exp_text = await self._generate_experience_text(exp_prompt)
+        if not exp_text or "no new experience" in exp_text.lower():
+            return "No previous experience."
+
+        parsed = self._parse_experience_items(exp_text)
+        return parsed if parsed else "No previous experience."
+
+    async def _replay_session(self, session_id: str):
+        """Replay mode: extract experience from the full session, then run teacher on every turn.
+
+        Flow:
+          1. Extract one experience from the entire conversation (synchronously await).
+          2. Temporarily inject that experience so get_experience_for_turn returns it.
+          3. For every pending turn, call _teacher_evaluate with the full-session experience.
+          4. After all teacher tasks complete, submit samples and clean up.
+        """
+        pending = self._pending_turn_data.get(session_id, {})
+        if not pending:
+            logger.info("[OpenClaw-OEL] replay session=%s no pending turns", session_id)
+            return
+
+        turn_nums = sorted(pending.keys())
+        logger.info(
+            "%s[OpenClaw-OEL] REPLAY session=%s starting: %d turns%s",
+            _MAGENTA, session_id, len(turn_nums), _RESET,
+        )
+
+        # Step 1: extract experience from complete conversation
+        with self._session_conv_lock:
+            conversation = self._session_conversations.get(session_id, [])
+
+        experience = await self._format_and_extract_experience(conversation)
+        if experience != "No previous experience.":
+            logger.info(
+                "%s[OpenClaw-OEL] REPLAY session=%s extracted experience: %d chars%s",
+                _MAGENTA, session_id, len(experience), _RESET,
+            )
+
+        # Clean up conversation tracking
+        with self._session_conv_lock:
+            self._session_conversations.pop(session_id, None)
+
+        # Step 2: temporarily store replay experience for this session
+        # Override get_experience_for_turn by using _session_experience with replay key
+        with self._session_experience_lock:
+            self._session_experience[session_id] = experience
+
+        # Step 3: fire teacher evaluation for all turns
+        # Reconstruct next_state for each turn from stored data
+        tasks = []
+        for i, tn in enumerate(turn_nums):
+            td = pending[tn]
+            # next_state: saved during Phase 1, or "[session ended]" for last turn
+            next_state = td.pop("_replay_next_state", None)
+            if next_state is None:
+                next_state = {"role": "user", "content": "[session ended]"}
+            task = asyncio.create_task(self._teacher_evaluate(session_id, tn, td, next_state))
+            task.add_done_callback(self._task_done_cb)
+            self._oel_tasks.setdefault(session_id, {})[tn] = task
+            td["has_next_state"] = True
+            tasks.append(task)
+
+        # Wait for all teacher evaluations to complete
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Step 4: submit all ready samples
+        self._maybe_submit_ready_samples(session_id, force_drop_without_next_state=True)
+
+        # Clean up replay experience
+        with self._session_experience_lock:
+            self._session_experience.pop(session_id, None)
+
+        logger.info(
+            "%s[OpenClaw-OEL] REPLAY session=%s completed: %d turns replayed%s",
+            _MAGENTA, session_id, len(turn_nums), _RESET,
+        )
+
     # -----------------------------------------------------------------------
     # Experience injection
     # -----------------------------------------------------------------------
@@ -997,42 +1122,13 @@ class OpenClawOELAPIServer:
         with self._session_conv_lock:
             conversation = self._session_conversations.pop(session_id, [])
 
-        if not conversation or len(conversation) < 1:
+        if not conversation:
             logger.info("[OpenClaw-OEL] session=%s no conversation to extract experience from", session_id)
             return
 
-        # Format conversation as interaction text
-        interaction_parts = []
-        for i, turn in enumerate(conversation):
-            interaction_parts.append(f"Turn {i+1}:")
-            interaction_parts.append(f"  User: {turn['user'][:500]}")
-            interaction_parts.append(f"  Assistant: {turn['assistant'][:500]}")
-        latest_interaction = "\n".join(interaction_parts)
-
-        with self._experience_lock:
-            current_exp = self._experience_text
-
-        # Build experience extraction prompt
-        exp_prompt = self._extraction_prompt_template.format(
-            PREVIOUS_EXPERIENCE=current_exp if current_exp != "No previous experience." else "No previous experience.",
-            LATEST_EXPERIENCE=latest_interaction,
-        )
-
-        # Call PRM engine to generate experience
-        exp_text = await self._generate_experience_text(exp_prompt)
-        if not exp_text:
-            logger.info("[OpenClaw-OEL] session=%s experience extraction returned empty", session_id)
-            return
-
-        # V2 dedup: model may output "No new experience." if nothing novel
-        if "no new experience" in exp_text.lower():
-            logger.info("[OpenClaw-OEL] session=%s model reported no new experience, skipping", session_id)
-            return
-
-        # Parse "- EXPERIENCE ITEM: ..." lines
-        parsed_items = self._parse_experience_items(exp_text)
-        if not parsed_items:
-            logger.info("[OpenClaw-OEL] session=%s no valid experience items parsed", session_id)
+        parsed_items = await self._format_and_extract_experience(conversation)
+        if parsed_items == "No previous experience.":
+            logger.info("[OpenClaw-OEL] session=%s experience extraction yielded nothing new", session_id)
             return
 
         # Update global experience

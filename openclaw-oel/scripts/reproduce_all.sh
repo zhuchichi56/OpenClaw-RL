@@ -11,7 +11,7 @@
 # Prerequisites:
 #   - Docker container "openclaw-slime" running with 4x H100 GPUs
 #   - Model weights at ${REPO_ROOT}/models/Qwen3-1.7B
-#   - GPT-4.1 API key set via AZURE_OPENAI_* or equivalent in run_ms_api.py
+#   - GPT-4.1 API key set via OPENAI_API_KEY environment variable
 #
 # Usage:
 #   bash scripts/reproduce_all.sh              # run all 4 experiments

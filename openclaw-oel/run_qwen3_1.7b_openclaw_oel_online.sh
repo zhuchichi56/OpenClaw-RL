@@ -67,7 +67,8 @@ export OPENCLAW_OEL_MODE="online"
 export OPENCLAW_OEL_EXPERIENCE_MAX_LENGTH="${OPENCLAW_OEL_EXPERIENCE_MAX_LENGTH:-2048}"
 # Extraction prompt: "v1" (general), "v2" (specific + dedup, default), or a file path
 export OPENCLAW_OEL_EXTRACTION_PROMPT="${OPENCLAW_OEL_EXTRACTION_PROMPT:-v2}"
-# Per-session experience: "0" (global accumulation, default) or "1" (per-session, per-turn extraction)
+# Per-session experience: "0" (global accumulation, default), "1" (per-session per-turn extraction),
+#   or "replay" (post-hoc: extract experience from full session, then replay teacher on all turns)
 export OPENCLAW_OEL_SESSION_EXPERIENCE="${OPENCLAW_OEL_SESSION_EXPERIENCE:-0}"
 
 # --- Configurable: teacher (PRM) weight update ---
