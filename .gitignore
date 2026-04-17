@@ -225,5 +225,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-# Docker symlinks (train_async.py points to container paths)
-**/train_async.py
