@@ -80,9 +80,6 @@ openclaw-oel/
 ├── openclaw_oel_rollout.py                      # Rollout bridge to SLIME trainer
 ├── oel_distillation_loss.py                     # Top-K reverse KL loss (Megatron + FSDP)
 ├── run_qwen3_1.7b_openclaw_oel_online.sh        # Training script (paper default)
-├── scripts/
-│   ├── reproduce_all.sh                         # One-click reproduction of all experiments
-│   └── plot_3method_comparison.py               # Generate comparison figure
 ├── data/
 │   ├── hard_problems_train.json                 # 36 hard GSM8K problems for training
 │   └── hard_problems_eval.json                  # 36 hard GSM8K problems for evaluation
@@ -90,6 +87,5 @@ openclaw-oel/
     ├── gsm8k_personal_agent.py                  # Experiment runner (training + evaluation loop)
     ├── personalization_evaluator.py             # GPT-4.1-based score evaluator
     ├── openai_api.py                            # OpenAI API client (configure via OPENAI_API_KEY)
-    ├── select_hard_problems.py                  # Hard problem selection (requires full GSM8K)
-    └── results/                                 # Experiment results (JSON, auto-created)
+    └── select_hard_problems.py                  # Hard problem selection (requires full GSM8K)
 ```
