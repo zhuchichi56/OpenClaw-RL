@@ -14,20 +14,7 @@ For each session:
 
 Over time, the student internalizes experience without needing it in the prompt at inference time.
 
-## Option A: SDFT/SDPO-style (Per-Turn Distillation)
-
-Per-turn distillation **without** persistent experience, following [SDFT](https://arxiv.org/abs/2601.19897) and [SDPO](https://arxiv.org/abs/2601.20802). Teacher signal comes from next-turn hindsight hints (ephemeral, not accumulated).
-
-Loss: reverse KL over top-K bins (K=50) plus tail mass:
-
-$$D_{KL}\left(\pi_\theta^{K+1}\|\pi_{teacher}^{K+1}\right)=\sum_{k=1}^{K+1}\pi_\theta^{(k)}\left(\log\pi_\theta^{(k)}-\log\pi_{teacher}^{(k)}\right)$$
-
-```bash
-cd slime
-bash ../openclaw-opd/run_qwen3_1.7b_openclaw_opd_topk.sh
-```
-
-## Option B (Default): OEL/OPCD-style (Experience-Augmented Distillation)
+## Method: OEL/OPCD-style (Experience-Augmented Distillation)
 
 Cross-session experience accumulation with post-hoc extraction and teacher replay:
 
