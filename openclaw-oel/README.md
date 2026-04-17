@@ -107,7 +107,7 @@ Reproduce: see [Prerequisites](#prerequisites) above.
 ```text
 openclaw-oel/
 ├── README.md
-├── train_async.py                               # Async training entry point (symlink → ../slime/)
+├── train_async.py                               # Symlink → ../slime/train_async.py (SLIME training entry, required by Ray job working-dir)
 ├── openclaw_oel_api_server.py                   # API server: experience extraction + teacher query + sample submission
 ├── openclaw_oel_rollout.py                      # Rollout bridge to SLIME trainer
 ├── oel_distillation_loss.py                     # Top-K reverse KL loss (Megatron + FSDP)
