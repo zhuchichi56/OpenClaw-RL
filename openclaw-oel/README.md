@@ -70,19 +70,17 @@ Key args:
 
 ## Key Results
 
-Comparison on **Hard GSM8K**, Qwen3-1.7B, 40 rounds:
+OEL/OPCD-style on **Hard GSM8K**, Qwen3-1.7B, 40 rounds:
 
-| Method | Baseline | Peak Student | Delta | Teacher (stable?) |
-|--------|----------|-------------|-------|-------------------|
-| **OEL/OPCD-style (Ours)** | 0.266 | **0.460** | **+0.194** | 0.56-0.70 |
-| SDFT/SDPO-style | 0.290 | 0.415 | +0.126 | 0.53-0.72 |
-
-![Comparison](scripts/3method_comparison.png)
+| Metric | Value |
+|--------|-------|
+| Baseline | 0.266 |
+| Peak Student | **0.460** (+0.194) |
+| Teacher | 0.56–0.70 (stable, no forgetting) |
 
 Reproduce:
 ```bash
 bash scripts/reproduce_all.sh           # all experiments (~8 hours)
-python3 scripts/plot_3method_comparison.py  # regenerate figure
 ```
 
 ## File Layout
