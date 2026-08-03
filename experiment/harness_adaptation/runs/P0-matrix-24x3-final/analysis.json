@@ -1,0 +1,165 @@
+{
+  "agents": [
+    "hermes",
+    "openclaw",
+    "qwenpaw"
+  ],
+  "harnesses": {
+    "hermes": {
+      "anomalous_tasks": [
+        "CTB_A02_investment_priority_matrix",
+        "CTB_A03_cashflow_risk_memo",
+        "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+        "task_blog",
+        "task_openclaw_comprehension"
+      ],
+      "api_error_anomalies": 0,
+      "full_passes": 5,
+      "mean_score": 0.7002997685185185,
+      "status_failures": 0,
+      "tasks": 24,
+      "total_execution_seconds": 2958.7236375808716
+    },
+    "openclaw": {
+      "anomalous_tasks": [
+        "task_blog"
+      ],
+      "api_error_anomalies": 0,
+      "full_passes": 5,
+      "mean_score": 0.7386980820105821,
+      "status_failures": 0,
+      "tasks": 24,
+      "total_execution_seconds": 2100.0152587890625
+    },
+    "qwenpaw": {
+      "anomalous_tasks": [
+        "task_blog"
+      ],
+      "api_error_anomalies": 0,
+      "full_passes": 8,
+      "mean_score": 0.8074596560846561,
+      "status_failures": 0,
+      "tasks": 24,
+      "total_execution_seconds": 2214.6627113819122
+    }
+  },
+  "pairs": {
+    "hermes_vs_openclaw": {
+      "largest_absolute_score_gaps": [
+        {
+          "score_delta": -1.0,
+          "task_id": "CTB_A02_investment_priority_matrix"
+        },
+        {
+          "score_delta": -1.0,
+          "task_id": "CTB_A03_cashflow_risk_memo"
+        },
+        {
+          "score_delta": 0.8333333333333334,
+          "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation"
+        },
+        {
+          "score_delta": -0.8333333333333334,
+          "task_id": "task_openclaw_comprehension"
+        },
+        {
+          "score_delta": 0.78125,
+          "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data"
+        }
+      ],
+      "left": "hermes",
+      "left_pass_right_fail": [
+        "T006_email_reply_draft",
+        "T012_expense_report",
+        "T016_kb_search",
+        "T097_pinbench_eli5_model_summary"
+      ],
+      "mean_score_delta": -0.03839831349206349,
+      "paired_net_full_passes": 0,
+      "right": "openclaw",
+      "right_pass_left_fail": [
+        "CTB_A02_investment_priority_matrix",
+        "CTB_A03_cashflow_risk_memo",
+        "T003zh_calendar_scheduling",
+        "T022_newsletter_curation"
+      ]
+    },
+    "hermes_vs_qwenpaw": {
+      "largest_absolute_score_gaps": [
+        {
+          "score_delta": -1.0,
+          "task_id": "CTB_A03_cashflow_risk_memo"
+        },
+        {
+          "score_delta": -0.7777777777777778,
+          "task_id": "CTB_A02_investment_priority_matrix"
+        },
+        {
+          "score_delta": -0.31399999999999995,
+          "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution"
+        },
+        {
+          "score_delta": -0.25,
+          "task_id": "CTB_SALES_10_key_account_health"
+        },
+        {
+          "score_delta": -0.25,
+          "task_id": "T003zh_calendar_scheduling"
+        }
+      ],
+      "left": "hermes",
+      "left_pass_right_fail": [
+        "T016_kb_search"
+      ],
+      "mean_score_delta": -0.10715988756613756,
+      "paired_net_full_passes": -3,
+      "right": "qwenpaw",
+      "right_pass_left_fail": [
+        "CTB_A03_cashflow_risk_memo",
+        "CTB_MGMT_02_budget_allocation_proposal",
+        "CTB_OPS_04_cross_team_dependency_map",
+        "T003zh_calendar_scheduling"
+      ]
+    },
+    "openclaw_vs_qwenpaw": {
+      "largest_absolute_score_gaps": [
+        {
+          "score_delta": -0.8666666666666667,
+          "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation"
+        },
+        {
+          "score_delta": 0.8333333333333334,
+          "task_id": "task_openclaw_comprehension"
+        },
+        {
+          "score_delta": -0.8125,
+          "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data"
+        },
+        {
+          "score_delta": -0.6799999999999999,
+          "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution"
+        },
+        {
+          "score_delta": -0.25,
+          "task_id": "CTB_SALES_10_key_account_health"
+        }
+      ],
+      "left": "openclaw",
+      "left_pass_right_fail": [
+        "CTB_A02_investment_priority_matrix",
+        "T022_newsletter_curation"
+      ],
+      "mean_score_delta": -0.06876157407407407,
+      "paired_net_full_passes": -3,
+      "right": "qwenpaw",
+      "right_pass_left_fail": [
+        "CTB_MGMT_02_budget_allocation_proposal",
+        "CTB_OPS_04_cross_team_dependency_map",
+        "T006_email_reply_draft",
+        "T012_expense_report",
+        "T097_pinbench_eli5_model_summary"
+      ]
+    }
+  },
+  "task_count": 24
+}

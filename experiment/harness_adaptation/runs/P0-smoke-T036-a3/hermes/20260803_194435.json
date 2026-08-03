@@ -1,0 +1,64 @@
+{
+  "benchmark": "pawbench",
+  "model": "custom/qwen3.5-4b-polar",
+  "timestamp": "2026-08-03T19:44:46.879463",
+  "summary": {
+    "total_runs": 1,
+    "tasks_completed": 1,
+    "passed": 0,
+    "pass_rate": 0.0,
+    "avg_score": 0.0,
+    "runs_per_task": 1,
+    "total_time": 11.75,
+    "avg_execution_time": 11.75,
+    "total_usage": {
+      "prompt_tokens": 86,
+      "completion_tokens": 50,
+      "total_tokens": 136
+    },
+    "errors": {
+      "total": 0,
+      "timed_out": 0,
+      "failed": 0
+    },
+    "by_label": {}
+  },
+  "results": [
+    {
+      "task_id": "T098_pinbench_openclaw_facts",
+      "task_name": "Pinbench OpenClaw Facts",
+      "score": 0.0,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "score": 0.0
+      },
+      "notes": "",
+      "execution_time": 11.749553442001343,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 86,
+        "completion_tokens": 50,
+        "total_tokens": 136,
+        "estimated": true
+      },
+      "transcript_length": 2,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": true,
+        "has_error": true,
+        "has_api_error": false,
+        "items": [
+          {
+            "id": "SHORT_TRANSCRIPT",
+            "severity": "error",
+            "description": "Very short transcript (2 entries) — agent may have crashed immediately after starting"
+          }
+        ]
+      },
+      "labels": {}
+    }
+  ]
+}

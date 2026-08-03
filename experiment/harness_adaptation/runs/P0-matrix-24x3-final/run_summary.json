@@ -1,0 +1,1196 @@
+[
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 38.68774700164795,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9444444444444445,
+    "status": "success",
+    "task_id": "T002_email_triage",
+    "transcript_length": 10
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 40.94987869262695,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T003zh_calendar_scheduling",
+    "transcript_length": 8
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 38.68671369552612,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T006_email_reply_draft",
+    "transcript_length": 8
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 65.34329342842102,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.875,
+    "status": "success",
+    "task_id": "T011zh_expense_report",
+    "transcript_length": 10
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 103.12245202064514,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T012_expense_report",
+    "transcript_length": 40
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 46.826247453689575,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8571428571428571,
+    "status": "success",
+    "task_id": "T016_kb_search",
+    "transcript_length": 6
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 58.18517875671387,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T017zh_ticket_triage",
+    "transcript_length": 10
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 58.50991129875183,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9166666666666666,
+    "status": "success",
+    "task_id": "T022_newsletter_curation",
+    "transcript_length": 8
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 36.647696018218994,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T097_pinbench_eli5_model_summary",
+    "transcript_length": 8
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 29.68465542793274,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.778,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 8
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 43.35641574859619,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.7,
+    "status": "success",
+    "task_id": "CTB_A01_financial_reconciliation",
+    "transcript_length": 6
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 165.34317255020142,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.7777777777777778,
+    "status": "success",
+    "task_id": "CTB_A02_investment_priority_matrix",
+    "transcript_length": 43
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 47.802194118499756,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "CTB_A03_cashflow_risk_memo",
+    "transcript_length": 5
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 74.34157657623291,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.4166666666666667,
+    "status": "success",
+    "task_id": "CTB_DATA_20_project_cost_vs_plan",
+    "transcript_length": 13
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 46.021278619766235,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "CTB_MGMT_02_budget_allocation_proposal",
+    "transcript_length": 5
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 188.19061470031738,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "CTB_OPS_04_cross_team_dependency_map",
+    "transcript_length": 13
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 105.61933279037476,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9166666666666666,
+    "status": "success",
+    "task_id": "CTB_SALES_10_key_account_health",
+    "transcript_length": 14
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (4 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 35.49111294746399,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9,
+    "status": "success",
+    "task_id": "task_blog",
+    "transcript_length": 4
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 46.31759285926819,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9375,
+    "status": "success",
+    "task_id": "task_meeting_blog_post",
+    "transcript_length": 8
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 115.24434471130371,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_openclaw_comprehension",
+    "transcript_length": 28
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 436.50375175476074,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8125,
+    "status": "success",
+    "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data",
+    "transcript_length": 137
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 200.3014898300171,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+    "transcript_length": 37
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 71.90785002708435,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8666666666666667,
+    "status": "success",
+    "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation",
+    "transcript_length": 22
+  },
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 121.57821035385132,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.6799999999999999,
+    "status": "success",
+    "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution",
+    "transcript_length": 134
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 59.59645080566406,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9444444444444445,
+    "status": "success",
+    "task_id": "T002_email_triage",
+    "transcript_length": 7
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 70.16049122810364,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T003zh_calendar_scheduling",
+    "transcript_length": 11
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 65.2499086856842,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9500000000000001,
+    "status": "success",
+    "task_id": "T006_email_reply_draft",
+    "transcript_length": 7
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 70.88597846031189,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.875,
+    "status": "success",
+    "task_id": "T011zh_expense_report",
+    "transcript_length": 5
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 90.52021598815918,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.875,
+    "status": "success",
+    "task_id": "T012_expense_report",
+    "transcript_length": 7
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 58.06960725784302,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8571428571428571,
+    "status": "success",
+    "task_id": "T016_kb_search",
+    "transcript_length": 5
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 83.21515369415283,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T017zh_ticket_triage",
+    "transcript_length": 9
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 95.17182183265686,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T022_newsletter_curation",
+    "transcript_length": 8
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 54.5064959526062,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9,
+    "status": "success",
+    "task_id": "T097_pinbench_eli5_model_summary",
+    "transcript_length": 8
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 50.425002098083496,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.778,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 9
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 65.9473204612732,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8,
+    "status": "success",
+    "task_id": "CTB_A01_financial_reconciliation",
+    "transcript_length": 8
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 146.79010033607483,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "CTB_A02_investment_priority_matrix",
+    "transcript_length": 12
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 68.26845335960388,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "CTB_A03_cashflow_risk_memo",
+    "transcript_length": 7
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 187.43277287483215,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.5833333333333334,
+    "status": "success",
+    "task_id": "CTB_DATA_20_project_cost_vs_plan",
+    "transcript_length": 28
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 61.7690064907074,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8333333333333334,
+    "status": "success",
+    "task_id": "CTB_MGMT_02_budget_allocation_proposal",
+    "transcript_length": 5
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 65.86932325363159,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.945,
+    "status": "success",
+    "task_id": "CTB_OPS_04_cross_team_dependency_map",
+    "transcript_length": 5
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 74.8575029373169,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.6666666666666666,
+    "status": "success",
+    "task_id": "CTB_SALES_10_key_account_health",
+    "transcript_length": 6
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (4 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 51.73605918884277,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.95,
+    "status": "success",
+    "task_id": "task_blog",
+    "transcript_length": 4
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 63.30938673019409,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9375,
+    "status": "success",
+    "task_id": "task_meeting_blog_post",
+    "transcript_length": 9
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 88.95699620246887,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8333333333333334,
+    "status": "success",
+    "task_id": "task_openclaw_comprehension",
+    "transcript_length": 35
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 50.72389626502991,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data",
+    "transcript_length": 12
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 371.70945739746094,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+    "transcript_length": 8
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 54.92601943016052,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation",
+    "transcript_length": 13
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 49.91783785820007,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution",
+    "transcript_length": 9
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 21.213753700256348,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9444444444444445,
+    "status": "success",
+    "task_id": "T002_email_triage",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 35.06955814361572,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.75,
+    "status": "success",
+    "task_id": "T003zh_calendar_scheduling",
+    "transcript_length": 16
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 28.001595973968506,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T006_email_reply_draft",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 55.88748383522034,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.9583333333333334,
+    "status": "success",
+    "task_id": "T011zh_expense_report",
+    "transcript_length": 10
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 38.831708669662476,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T012_expense_report",
+    "transcript_length": 8
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 29.834637880325317,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T016_kb_search",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 32.64550590515137,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T017zh_ticket_triage",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 40.69819259643555,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8333333333333334,
+    "status": "success",
+    "task_id": "T022_newsletter_curation",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 23.42985725402832,
+    "max_score": 1.0,
+    "passed": true,
+    "score": 1.0,
+    "status": "success",
+    "task_id": "T097_pinbench_eli5_model_summary",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 17.54384160041809,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.778,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 32.6470513343811,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8,
+    "status": "success",
+    "task_id": "CTB_A01_financial_reconciliation",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (2 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 250.44153237342834,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "CTB_A02_investment_priority_matrix",
+    "transcript_length": 2
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (2 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 249.26502060890198,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "CTB_A03_cashflow_risk_memo",
+    "transcript_length": 2
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 162.6562945842743,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.6666666666666666,
+    "status": "success",
+    "task_id": "CTB_DATA_20_project_cost_vs_plan",
+    "transcript_length": 21
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 36.849855184555054,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8333333333333334,
+    "status": "success",
+    "task_id": "CTB_MGMT_02_budget_allocation_proposal",
+    "transcript_length": 5
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 48.02781629562378,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8333333333333334,
+    "status": "success",
+    "task_id": "CTB_OPS_04_cross_team_dependency_map",
+    "transcript_length": 7
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 41.51250147819519,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.6666666666666666,
+    "status": "success",
+    "task_id": "CTB_SALES_10_key_account_health",
+    "transcript_length": 6
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (4 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 21.885324954986572,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.95,
+    "status": "success",
+    "task_id": "task_blog",
+    "transcript_length": 4
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 38.818100690841675,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8125,
+    "status": "success",
+    "task_id": "task_meeting_blog_post",
+    "transcript_length": 8
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (2 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 23.625187635421753,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_openclaw_comprehension",
+    "transcript_length": 2
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 622.5219421386719,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.78125,
+    "status": "success",
+    "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data",
+    "transcript_length": 90
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (2 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 909.8806474208832,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+    "transcript_length": 2
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 83.69162940979004,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.8333333333333334,
+    "status": "success",
+    "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation",
+    "transcript_length": 54
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 113.74459791183472,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.366,
+    "status": "success",
+    "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution",
+    "transcript_length": 29
+  }
+]

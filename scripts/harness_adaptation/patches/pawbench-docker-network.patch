@@ -1,0 +1,178 @@
+diff --git a/docker/Dockerfile.pawbench-qwenpaw b/docker/Dockerfile.pawbench-qwenpaw
+index ea851eb..b80f46f 100644
+--- a/docker/Dockerfile.pawbench-qwenpaw
++++ b/docker/Dockerfile.pawbench-qwenpaw
+@@ -73,6 +73,11 @@ ENV COPAW_RUNNING_IN_CONTAINER=1
+ # ── qwenpaw agent ─────────────────────────────────────────────────────────────
+ RUN pip install --no-cache-dir "qwenpaw==${QWENPAW_VERSION}"
+
++# QwenPaw 1.1.3 imports SetSessionModelResponse, which was removed in
++# agent-client-protocol 0.11+. Pin the newest compatible release.
++RUN pip install --no-cache-dir "agent-client-protocol==0.10.1" && \
++    python3 -c "from qwenpaw.app._app import app; from acp import SetSessionModelResponse"
++
+ # ── Common Python packages used across QwenClawBench tasks ────────────────────
+ # Pre-installing these avoids per-task pip install waits and network failures.
+ # Sources: requirements.txt files found in task assets across all 100 tasks.
+diff --git a/pawbench/backend.py b/pawbench/backend.py
+index 01416da..581d625 100644
+--- a/pawbench/backend.py
++++ b/pawbench/backend.py
+@@ -269,6 +269,7 @@ class PawBenchBackend(BenchmarkBackend):
+             env = DockerEnvironment(
+                 name=container_name,
+                 image=docker_image,
++                network=agent_config.get("docker_network"),
+                 environment_vars={
+                     "OPENAI_API_KEY": api_key,
+                     "OPENAI_BASE_URL": base_url,
+@@ -413,6 +414,7 @@ class PawBenchBackend(BenchmarkBackend):
+                 api_key=judge_api_key,
+                 base_url=judge_base_url,
+                 verbose=verbose,
++                automated_only=bool(agent_config.get("automated_only_grading")),
+             )
+             grade_notes = getattr(grade, "notes", "")
+         except Exception as exc:
+@@ -714,11 +716,13 @@ def _grade_with_credentials(
+     api_key: str | None,
+     base_url: str | None,
+     verbose: bool,
++    automated_only: bool = False,
+ ) -> Any:
+     """Call grade_task with JUDGE_BASE_URL / JUDGE_API_KEY injected into env."""
+     kwargs: dict[str, Any] = dict(
+         task=task, execution_result=execution_result,
+         verbose=verbose,
++        automated_only=automated_only,
+     )
+     if judge_model:
+         kwargs["judge_model"] = judge_model
+diff --git a/pawbench/agents/impl/hermes_agent.py b/pawbench/agents/impl/hermes_agent.py
+index f1eb94c..09f1bd3 100644
+--- a/pawbench/agents/impl/hermes_agent.py
++++ b/pawbench/agents/impl/hermes_agent.py
+@@ -168,6 +168,9 @@ class HermesAgent(ContainerAgent):
+         # making hermes terminate the session prematurely.
+         max_tokens = int(self.config.get("max_tokens", 16000))
+         model_section["max_tokens"] = max_tokens
++        context_limit = self.config.get("context_limit")
++        if context_limit is not None:
++            model_section["context_length"] = int(context_limit)
+
+         return {
+             "_config_version": 1,
+diff --git a/pawbench/agents/impl/openclaw_agent.py b/pawbench/agents/impl/openclaw_agent.py
+index 6d1a280..05fb907 100644
+--- a/pawbench/agents/impl/openclaw_agent.py
++++ b/pawbench/agents/impl/openclaw_agent.py
+@@ -499,6 +499,13 @@ class OpenClawAgent(ContainerAgent):
+             else:
+                 model_entry["input"] = _input_modalities
+
++            configured_context = self.config.get("context_limit")
++            configured_max_tokens = self.config.get("max_tokens")
++            if configured_context is not None:
++                model_entry["contextWindow"] = int(configured_context)
++            if configured_max_tokens is not None:
++                model_entry["maxTokens"] = int(configured_max_tokens)
++
+             primary = f"{openclaw_provider}/{model_name}"
+
+             # agents.defaults.imageModel → vision_model_ref (see vision_model_name above)
+diff --git a/pawbench/agents/impl/qwenpaw_agent.py b/pawbench/agents/impl/qwenpaw_agent.py
+index 6c43dd5..5856fb6 100644
+--- a/pawbench/agents/impl/qwenpaw_agent.py
++++ b/pawbench/agents/impl/qwenpaw_agent.py
+@@ -360,9 +360,16 @@ cli()
+             "  sleep 1; "
+             "done; "
+             f"curl -sf {_SERVER_URL}/api/version >/dev/null 2>&1 || "
+-            "  echo '[qwenpaw-server] WARNING: server may not be ready'"
++            "  { echo '[qwenpaw-server] ERROR: server is not ready'; "
++            "    tail -80 /tmp/qwenpaw_server.log 2>/dev/null; exit 1; }"
+         )
+-        await environment.execute_command(server_cmd, timeout=90)
++        result = await environment.execute_command(server_cmd, timeout=90)
++        if not result.get("success"):
++            raise RuntimeError(
++                "QwenPaw server failed readiness:\n"
++                + result.get("stdout", "")
++                + result.get("stderr", "")
++            )
+
+     # ── run ───────────────────────────────────────────────────────────────────
+
+diff --git a/pawbench/agents/factory.py b/pawbench/agents/factory.py
+index 37fe15e..b2589dc 100644
+--- a/pawbench/agents/factory.py
++++ b/pawbench/agents/factory.py
+@@ -31,6 +31,7 @@ class AgentFactory:
+     # Populated lazily to avoid import-time circular dependencies.
+     _REGISTRY: "dict[str, tuple[type, str]]" = {}
+     _AGENT_RUNTIME_CONFIG_KEYS = (
++        "context_limit",
+         "generate_kwargs",
+         "max_tokens",
+         "max_turns",
+diff --git a/pawbench/envs/docker.py b/pawbench/envs/docker.py
+index a7aa6f0..c1fa301 100644
+--- a/pawbench/envs/docker.py
++++ b/pawbench/envs/docker.py
+@@ -23,6 +23,7 @@ class DockerEnvironment(BaseEnvironment):
+         volumes: Optional[Dict[str, str]] = None,
+         ports: Optional[Dict[str, str]] = None,
+         environment_vars: Optional[Dict[str, str]] = None,
++        network: Optional[str] = None,
+         **kwargs: Any
+     ):
+         """Initialize the Docker environment.
+@@ -33,6 +34,7 @@ class DockerEnvironment(BaseEnvironment):
+             volumes: Volume mappings for the container
+             ports: Port mappings for the container
+             environment_vars: Environment variables for the container
++            network: Optional Docker network to attach the container to
+             **kwargs: Additional configuration parameters
+         """
+         super().__init__(name, **kwargs)
+@@ -40,5 +42,6 @@ class DockerEnvironment(BaseEnvironment):
+         self.ports = ports or {}
+         self.environment_vars = environment_vars or {}
++        self.network = network
+         self.container_id: Optional[str] = None
+         self._is_running = False
+
+@@ -50,6 +53,9 @@ class DockerEnvironment(BaseEnvironment):
+
+         cmd = ["docker", "run", "-d", "--name", self.name]
+
++        if self.network:
++            cmd.extend(["--network", self.network])
++
+         # Add volume mounts
+         for host_path, container_path in self.volumes.items():
+             cmd.extend(["-v", f"{host_path}:{container_path}"])
+@@ -199,4 +205,4 @@ class DockerEnvironment(BaseEnvironment):
+     @property
+     def is_running(self) -> bool:
+         """Check if the container is running."""
+-        return self._is_running
+\ No newline at end of file
++        return self._is_running
+diff --git a/pawbench/grader.py b/pawbench/grader.py
+index eacc9b7..7720763 100644
+--- a/pawbench/grader.py
++++ b/pawbench/grader.py
+@@ -71,8 +71,12 @@ def grade_task(
+     judge_model: str = DEFAULT_JUDGE_MODEL,
+     judge_timeout_seconds: float = DEFAULT_JUDGE_TIMEOUT_SECONDS,
+     verbose: bool = False,
++    automated_only: bool = False,
+ ) -> GradeResult:
+     grading_type = task.grading_type
+
++    if automated_only and grading_type in {"automated", "hybrid"}:
++        return _grade_automated(task, execution_result, verbose=verbose)
++
+     if grading_type == "automated":
+         return _grade_automated(task, execution_result, verbose=verbose)

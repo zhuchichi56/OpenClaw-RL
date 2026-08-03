@@ -1,0 +1,8 @@
+{
+  "artifact": "OpenClaw-RL-P0-matrix-24x3-final.tar.zst",
+  "durable_path": "/mnt/zhuhe/projects/OpenClaw-RL/harness_adaptation/P0/OpenClaw-RL-P0-matrix-24x3-final.tar.zst",
+  "files": 5405,
+  "sha256": "e0e050d25946dea8496d18f7dbd8d04eee5e7ed629a8f91af7b4520d48b15b99",
+  "size_bytes": 2762054,
+  "state": "verified_readable"
+}

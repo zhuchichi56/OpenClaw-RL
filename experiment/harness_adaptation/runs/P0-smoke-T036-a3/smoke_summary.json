@@ -1,0 +1,24 @@
+[
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": true,
+      "is_anomalous": true,
+      "items": [
+        {
+          "description": "Very short transcript (2 entries) \u2014 agent may have crashed immediately after starting",
+          "id": "SHORT_TRANSCRIPT",
+          "severity": "error"
+        }
+      ]
+    },
+    "execution_time": 11.749553442001343,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.0,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 2
+  }
+]

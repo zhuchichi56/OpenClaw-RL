@@ -1,0 +1,328 @@
+{
+  "benchmark": {
+    "commit": "0f794a8bb6c27aa9ee4091b2691fa30e4ed9cc8f",
+    "dataset": "pawbench-v1.0",
+    "repo": "https://github.com/agentscope-ai/PawBench.git"
+  },
+  "execution_overlay": {
+    "patch": "scripts/harness_adaptation/patches/pawbench-docker-network.patch",
+    "request_proxy": "scripts/harness_adaptation/openai_request_clamp_proxy.py",
+    "request_proxy_sha256": "0a3d18d9b789bfde1e6e57ca61d82a9ce791abcd5bda2eb5222802daa766f514",
+    "sha256": "19e51a4b730863bda39a684d548347a7515684f96c7f3cda59ca748236141ae8"
+  },
+  "harnesses": [
+    {
+      "dockerfile": "docker/Dockerfile.pawbench-qwenpaw",
+      "dockerfile_sha256": "c6284efa71e5c66f5c4f66d445e83717cc4982bad0fdfa448f45a93bd921c11f",
+      "expected_runtime_version": "1.1.3",
+      "image": "qwenclawbench-qwenpaw:latest",
+      "image_id": "sha256:d51b786f6afc718dd74acaf4376070aa145924d67acffa8123c6a0b0b0441cff",
+      "name": "qwenpaw",
+      "observed_runtime_version": "QwenPaw, version 1.1.3"
+    },
+    {
+      "dockerfile": "docker/Dockerfile.pawbench-openclaw",
+      "dockerfile_sha256": "6914fec7c98cb940d36ba03210566226b1de9e84f52fd2aa661a061cb2d508f0",
+      "expected_runtime_version": "2026.7.1",
+      "image": "openclaw-pawbench:latest",
+      "image_id": "sha256:58d07b2d123c7ffcc6ea16454277480f32a022eac0824eea3da776e76e52b60b",
+      "name": "openclaw",
+      "observed_runtime_version": "OpenClaw 2026.7.1 (2d2ddc4)"
+    },
+    {
+      "dockerfile": "docker/Dockerfile.pawbench-hermes",
+      "dockerfile_sha256": "fd3ac589988e14cba84c96c6e8629af032a4bc7c96562f4708bc66505c1cf557",
+      "expected_runtime_version": "2026.4.23",
+      "image": "hermes-qwenclawbench:latest",
+      "image_id": "sha256:f8edc429ab3c15f0a721a226b5de95599f5c9099c8ed68d6e3bd3306bdbe83cd",
+      "name": "hermes",
+      "observed_runtime_version": "Hermes Agent v0.11.0 (2026.4.23)\nProject: /opt/hermes\nPython: 3.11.2\nOpenAI SDK: 2.48.0"
+    }
+  ],
+  "model": {
+    "id": "custom/qwen3.5-4b-polar",
+    "revision": "568507d78f31db25ab0abeb97177b86186798a19"
+  },
+  "pass_gate": {
+    "paired_net_task_difference": 3,
+    "trace_attributable_failures": 3
+  },
+  "primary_grading": "deterministic_automated_checks",
+  "schema": "workplace-harness-pilot/v1",
+  "shared_endpoint": {
+    "base_url": "http://pawbench-pilot-model:30001/v1",
+    "context_limit": 65536,
+    "docker_network": "pawbench-pilot",
+    "max_generated_tokens": 8192,
+    "temperature": 0.0,
+    "timeout_multiplier": 1.0
+  },
+  "state": "execution_ready",
+  "task_set_sha256": "aae32b78a19c11300120fc6a2976246ec3fd0fde1de24b4667193d1c4e5448d5",
+  "tasks": [
+    {
+      "complexity": "L3",
+      "file": "T025_claweval_T022_newsletter_curation.md",
+      "grading_type": "hybrid",
+      "name": "Newsletter Curation",
+      "scenario": "Content_Creation/Writing",
+      "scenario_root": "Content_Creation",
+      "sha256": "e642c82f2b88e7b0a7911a6ac97d1b9b5a639be98df17449574478e691b5cca3",
+      "task_id": "T022_newsletter_curation",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T042_claweval_CTB_A01_financial_reconciliation.md",
+      "grading_type": "hybrid",
+      "name": "Financial Reconciliation Analysis",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "a9894aec587b6d0295348f8e6db6f1cfdd0e3cb95cc6d3fe9ade6fe1bfe8a33d",
+      "task_id": "CTB_A01_financial_reconciliation",
+      "timeout_seconds": 240
+    },
+    {
+      "complexity": "L3",
+      "file": "T086_qwenclawbench_00075_sector_momentum_rotation_backtest_with_data_quality_traps.md",
+      "grading_type": "hybrid",
+      "name": "Sector Momentum Rotation Backtest with Data Quality Traps",
+      "scenario": "Finance_Investment/Stock",
+      "scenario_root": "Finance_Investment",
+      "sha256": "66f53cf959c5c8f5c735dab8254d8bbbcecf7dec8865ae900b7583251f41b835",
+      "task_id": "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+      "timeout_seconds": 900
+    },
+    {
+      "complexity": "L3",
+      "file": "T021_claweval_T016_kb_search.md",
+      "grading_type": "hybrid",
+      "name": "Knowledge Base Search (VPN troubleshooting)",
+      "scenario": "Information_Retrieval/Knowledge_Base",
+      "scenario_root": "Information_Retrieval",
+      "sha256": "3baa44947ff3406ed87b25f482048c4de150cfe6a3dcfd2ddb3ab7bcfa0133f8",
+      "task_id": "T016_kb_search",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L1",
+      "file": "T036_claweval_T098_pinbench_openclaw_facts.md",
+      "grading_type": "automated",
+      "name": "Pinbench OpenClaw Facts",
+      "scenario": "Knowledge/QA",
+      "scenario_root": "Knowledge",
+      "sha256": "36842611f9ef3362adde00cc394e8e8b1d4b1c348b6a21e12e28c29522f32d28",
+      "task_id": "T098_pinbench_openclaw_facts",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L2",
+      "file": "T016_claweval_T002_email_triage.md",
+      "grading_type": "hybrid",
+      "name": "Email Triage",
+      "scenario": "Office_Productivity/Email",
+      "scenario_root": "Office_Productivity",
+      "sha256": "9ba071f3ca43f0b4b9fadcadc97a47ff07c8b7e58d18a354d938f92ada2b7e00",
+      "task_id": "T002_email_triage",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L2",
+      "file": "T035_claweval_T097_pinbench_eli5_model_summary.md",
+      "grading_type": "automated",
+      "name": "Pinbench ELI5 Model Summary",
+      "scenario": "Content_Creation/Writing",
+      "scenario_root": "Content_Creation",
+      "sha256": "e932ab6d53af8a28c3164322af3795b5678ea63760b6b6dc56e4b9548962d0ce",
+      "task_id": "T097_pinbench_eli5_model_summary",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T043_claweval_CTB_A02_investment_priority_matrix.md",
+      "grading_type": "hybrid",
+      "name": "Project Investment Priority Matrix",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "91c23c9ae75cc493766747390e3b71ecb09ac3780f7ab17b66d1f5f61daa1aaa",
+      "task_id": "CTB_A02_investment_priority_matrix",
+      "timeout_seconds": 240
+    },
+    {
+      "complexity": "L3",
+      "file": "T104_qwenclawbench_00068_enhanced_poly_arb_monitoring_script_execution.md",
+      "grading_type": "hybrid",
+      "name": "Enhanced Poly-Arb Monitoring Script Execution",
+      "scenario": "Finance_Investment/Quantitative_Trading",
+      "scenario_root": "Finance_Investment",
+      "sha256": "1605e43338b47101e1ad6f9bc2a84b6b0504024a156fc83fd352ebb1ba791594",
+      "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution",
+      "timeout_seconds": 1800
+    },
+    {
+      "complexity": "L3",
+      "file": "T097_qwenclawbench_00100_house_robber_algorithm_deep_dive_explanation.md",
+      "grading_type": "hybrid",
+      "name": "House Robber Algorithm Deep-Dive Explanation",
+      "scenario": "Information_Retrieval/Knowledge_Base",
+      "scenario_root": "Information_Retrieval",
+      "sha256": "528d5a595a0f0cd9189389bc6fed70789c89309b5a97f0c7c612c82b8ca4df1f",
+      "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation",
+      "timeout_seconds": 600
+    },
+    {
+      "complexity": "L3",
+      "file": "T063_pinchbench_openclaw_comprehension.md",
+      "grading_type": "automated",
+      "name": "OpenClaw Report Comprehension",
+      "scenario": "Knowledge/QA",
+      "scenario_root": "Knowledge",
+      "sha256": "fa192ba3053f05cff77bdb42a2795fbfde19d2eea3cd4f58a6f084115474b8d4",
+      "task_id": "task_openclaw_comprehension",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T017_claweval_T003zh_calendar_scheduling.md",
+      "grading_type": "hybrid",
+      "name": "Calendar Scheduling",
+      "scenario": "Office_Productivity/Calendar",
+      "scenario_root": "Office_Productivity",
+      "sha256": "b6d6a974df561f1ee8a7b15be2e8152ed596c2620f614f6195506f51e5b9b3aa",
+      "task_id": "T003zh_calendar_scheduling",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L1",
+      "file": "T053_pinchbench_blog.md",
+      "grading_type": "hybrid",
+      "name": "Blog Post Writing",
+      "scenario": "Content_Creation/Writing",
+      "scenario_root": "Content_Creation",
+      "sha256": "37b82d4f6d301094355b2b9256997c9e39d4fc834405b5a05f4816e87b194f54",
+      "task_id": "task_blog",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T044_claweval_CTB_A03_cashflow_risk_memo.md",
+      "grading_type": "hybrid",
+      "name": "Cashflow Risk Alert Memo",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "2e3db4102ede315356f707a5f53d3c93aa638d628444f86d4ba435f2b190f676",
+      "task_id": "CTB_A03_cashflow_risk_memo",
+      "timeout_seconds": 240
+    },
+    {
+      "complexity": "L2",
+      "file": "T018_claweval_T006_email_reply_draft.md",
+      "grading_type": "hybrid",
+      "name": "Email Reply Draft",
+      "scenario": "Office_Productivity/Email",
+      "scenario_root": "Office_Productivity",
+      "sha256": "0c8e45673725684f0fd35a7a552cb223b8ff35af648291ef186f694e9bb28d90",
+      "task_id": "T006_email_reply_draft",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L2",
+      "file": "T061_pinchbench_meeting_blog_post.md",
+      "grading_type": "hybrid",
+      "name": "Meeting to Blog Post",
+      "scenario": "Content_Creation/Writing",
+      "scenario_root": "Content_Creation",
+      "sha256": "c5a902e7190a77e474149feedbf3816dc984fcdfcf2b9f3b81661cc0d7bb4ecf",
+      "task_id": "task_meeting_blog_post",
+      "timeout_seconds": 600
+    },
+    {
+      "complexity": "L3",
+      "file": "T047_claweval_CTB_DATA_20_project_cost_vs_plan.md",
+      "grading_type": "hybrid",
+      "name": "Project Cost vs Plan Comparison",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "642d013a50fa913242ab52b3a547d8bd6031ff6516019869b30769cb26131055",
+      "task_id": "CTB_DATA_20_project_cost_vs_plan",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T019_claweval_T011zh_expense_report.md",
+      "grading_type": "hybrid",
+      "name": "Expense Report",
+      "scenario": "Office_Productivity/Expense",
+      "scenario_root": "Office_Productivity",
+      "sha256": "8bf2a9b1af7a51135cd6055cde04d66a68219180ad7e1c58f482c180197ab7d0",
+      "task_id": "T011zh_expense_report",
+      "timeout_seconds": 600
+    },
+    {
+      "complexity": "L3",
+      "file": "T082_qwenclawbench_00052_generate_openai_social_media_profile_from_workspace_data.md",
+      "grading_type": "hybrid",
+      "name": "Generate OpenAI Social Media Profile from Workspace Data",
+      "scenario": "Content_Creation/Social_Media",
+      "scenario_root": "Content_Creation",
+      "sha256": "d0af1f9c591eaa7ce21c9bbaedb5cecb2eac1ee6bf10e44a899f2b033085449c",
+      "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data",
+      "timeout_seconds": 900
+    },
+    {
+      "complexity": "L3",
+      "file": "T048_claweval_CTB_MGMT_02_budget_allocation_proposal.md",
+      "grading_type": "hybrid",
+      "name": "Q2 Budget Allocation Proposal",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "4f35f182504df3f38437145751f6ea2d091a16357791301170639a5cec2d071b",
+      "task_id": "CTB_MGMT_02_budget_allocation_proposal",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T020_claweval_T012_expense_report.md",
+      "grading_type": "hybrid",
+      "name": "Expense Report",
+      "scenario": "Office_Productivity/Expense",
+      "scenario_root": "Office_Productivity",
+      "sha256": "c57ae588ca1fb45d75143b5f13a9e0602706a2fae8ff67fe2e488edc2445a3d4",
+      "task_id": "T012_expense_report",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T049_claweval_CTB_OPS_04_cross_team_dependency_map.md",
+      "grading_type": "hybrid",
+      "name": "Cross-Team Dependency Map",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "9fd35c98692daa3d5cd3c88a09e335d176f6102d933dc1c1eea3ea974ee13df7",
+      "task_id": "CTB_OPS_04_cross_team_dependency_map",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T022_claweval_T017zh_ticket_triage.md",
+      "grading_type": "hybrid",
+      "name": "Ticket Triage",
+      "scenario": "Office_Productivity/Task_Management",
+      "scenario_root": "Office_Productivity",
+      "sha256": "b0a1ca57fc85855acbca553b07adb3d24ada1e3ebd946e11c18b647177303aa2",
+      "task_id": "T017zh_ticket_triage",
+      "timeout_seconds": 300
+    },
+    {
+      "complexity": "L3",
+      "file": "T050_claweval_CTB_SALES_10_key_account_health.md",
+      "grading_type": "hybrid",
+      "name": "Key Account Health Assessment",
+      "scenario": "Data_Analytics/Business_Intelligence",
+      "scenario_root": "Data_Analytics",
+      "sha256": "cb07318a6a7afc994dfc80242d08e3c8b183282210c987a0a19bd49257a50dc5",
+      "task_id": "CTB_SALES_10_key_account_health",
+      "timeout_seconds": 360
+    }
+  ]
+}

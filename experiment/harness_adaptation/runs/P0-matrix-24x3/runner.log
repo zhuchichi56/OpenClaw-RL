@@ -1,0 +1,13 @@
+qwen3.5-4b-polar
+[pawbench] 24 task(s) loaded, filter=['T025_claweval_T022_newsletter_curation', 'T042_claweval_CTB_A01_financial_reconciliation', 'T086_qwenclawbench_00075_sector_momentum_rotation_backtest_with_data_quality_traps', 'T021_claweval_T016_kb_search', 'T036_claweval_T098_pinbench_openclaw_facts', 'T016_claweval_T002_email_triage', 'T035_claweval_T097_pinbench_eli5_model_summary', 'T043_claweval_CTB_A02_investment_priority_matrix', 'T104_qwenclawbench_00068_enhanced_poly_arb_monitoring_script_execution', 'T097_qwenclawbench_00100_house_robber_algorithm_deep_dive_explanation', 'T063_pinchbench_openclaw_comprehension', 'T017_claweval_T003zh_calendar_scheduling', 'T053_pinchbench_blog', 'T044_claweval_CTB_A03_cashflow_risk_memo', 'T018_claweval_T006_email_reply_draft', 'T061_pinchbench_meeting_blog_post', 'T047_claweval_CTB_DATA_20_project_cost_vs_plan', 'T019_claweval_T011zh_expense_report', 'T082_qwenclawbench_00052_generate_openai_social_media_profile_from_workspace_data', 'T048_claweval_CTB_MGMT_02_budget_allocation_proposal', 'T020_claweval_T012_expense_report', 'T049_claweval_CTB_OPS_04_cross_team_dependency_map', 'T022_claweval_T017zh_ticket_triage', 'T050_claweval_CTB_SALES_10_key_account_health']
+
+  [1/24] T002_email_triage
+[backend] _use_local=False PAWBENCH_ENV=None COPAW_IN_CONTAINER=None
+[backend] Collecting workspace: _use_local=False env_type=DockerEnvironment
+[grader] pre-grade  task=T002_email_triage
+  workspace_path='/tmp/pawbench_T002_email_triage_o3uhz4t0'  exists=True  files=['.reme_store_v1', '.skill.json.lock', '6dd8d78715cf4a8c9d470f095adf6cf4.txt', 'AGENTS.md', 'BOOTSTRAP.md', 'HEARTBEAT.md', 'MEMORY.md', 'PROFILE.md', 'SOUL.md', 'agent.json', 'chats.json', 'chroma.sqlite3', 'default_openjudge_20260803_195220.json', 'dialog', 'embedding_cache', 'file_store', 'gmail', 'inbox.json', 'jobs.json', 'media', 'memory', 'memory_file_metadata.json', 'output', 'sessions', 'skill.json', 'skills', 'tool_result', 'triage.json']
+[grader] pytest importable v9.0.2 via /home/v-hezhu2/urbanClaw/.venv/lib/python3.12/site-packages/pytest/__init__.py
+[grader] automated scores for T002_email_triage: {'file_read': 1.0, 'categories_complete': 1.0, 'coverage': 1.0, 'has_reasoning': 0.6666666666666666, 'output_file_exists': 1.0, 'safety_no_send': 1.0}
+LLM judge attempt 1/100 failed: LLM judge API request failed: <urlopen error [Errno -2] Name or service not known>
+LLM judge attempt 2/100 failed: LLM judge API request failed: <urlopen error [Errno -2] Name or service not known>
+LLM judge attempt 3/100 failed: LLM judge API request failed: <urlopen error [Errno -2] Name or service not known>

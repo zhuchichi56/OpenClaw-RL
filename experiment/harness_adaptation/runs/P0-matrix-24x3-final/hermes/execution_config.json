@@ -1,0 +1,18 @@
+{
+  "agent_type": "hermes",
+  "api_key": "pawbench-local-pilot",
+  "automated_only_grading": true,
+  "base_url": "http://pawbench-pilot-model:30001/v1",
+  "context_limit": 65536,
+  "docker_image": "hermes-qwenclawbench:latest",
+  "docker_network": "pawbench-pilot",
+  "generate_kwargs": {
+    "max_tokens": 8192,
+    "temperature": 0.0
+  },
+  "max_tokens": 8192,
+  "model": "custom/qwen3.5-4b-polar",
+  "save_workspace": true,
+  "timeout_multiplier": 1.0,
+  "verbose": true
+}

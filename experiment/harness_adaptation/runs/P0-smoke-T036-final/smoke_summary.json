@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "qwenpaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 31.215660095214844,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.778,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 8
+  },
+  {
+    "agent": "openclaw",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 51.00678992271423,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.778,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 9
+  },
+  {
+    "agent": "hermes",
+    "anomaly": {
+      "has_api_error": false,
+      "has_error": false,
+      "is_anomalous": false,
+      "items": []
+    },
+    "execution_time": 18.005479097366333,
+    "max_score": 1.0,
+    "passed": false,
+    "score": 0.778,
+    "status": "success",
+    "task_id": "T098_pinbench_openclaw_facts",
+    "transcript_length": 6
+  }
+]

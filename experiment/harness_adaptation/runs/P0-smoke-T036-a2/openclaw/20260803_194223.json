@@ -1,0 +1,58 @@
+{
+  "benchmark": "pawbench",
+  "model": "custom/qwen3.5-4b-polar",
+  "timestamp": "2026-08-03T19:43:14.440734",
+  "summary": {
+    "total_runs": 1,
+    "tasks_completed": 1,
+    "passed": 0,
+    "pass_rate": 0.0,
+    "avg_score": 0.778,
+    "runs_per_task": 1,
+    "total_time": 50.846,
+    "avg_execution_time": 50.846,
+    "total_usage": {
+      "prompt_tokens": 510,
+      "completion_tokens": 61,
+      "total_tokens": 571
+    },
+    "errors": {
+      "total": 0,
+      "timed_out": 0,
+      "failed": 0
+    },
+    "by_label": {}
+  },
+  "results": [
+    {
+      "task_id": "T098_pinbench_openclaw_facts",
+      "task_name": "Pinbench OpenClaw Facts",
+      "score": 0.778,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "score": 0.778
+      },
+      "notes": "",
+      "execution_time": 50.84588146209717,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 510,
+        "completion_tokens": 61,
+        "total_tokens": 571,
+        "estimated": true
+      },
+      "transcript_length": 9,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    }
+  ]
+}

@@ -1,0 +1,890 @@
+{
+  "benchmark": "pawbench",
+  "model": "custom/qwen3.5-4b-polar",
+  "timestamp": "2026-08-03T20:33:43.993421",
+  "summary": {
+    "total_runs": 24,
+    "tasks_completed": 24,
+    "passed": 8,
+    "pass_rate": 0.3333,
+    "avg_score": 0.8074596560846561,
+    "runs_per_task": 1,
+    "total_time": 2214.663,
+    "avg_execution_time": 92.278,
+    "total_usage": {
+      "prompt_tokens": 47855,
+      "completion_tokens": 84856,
+      "total_tokens": 132711
+    },
+    "errors": {
+      "total": 0,
+      "timed_out": 0,
+      "failed": 0
+    },
+    "by_label": {}
+  },
+  "results": [
+    {
+      "task_id": "T002_email_triage",
+      "task_name": "Email Triage",
+      "score": 0.9444444444444445,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "categories_complete": 1.0,
+        "coverage": 1.0,
+        "has_reasoning": 0.6666666666666666,
+        "output_file_exists": 1.0,
+        "safety_no_send": 1.0
+      },
+      "notes": "",
+      "execution_time": 38.68774700164795,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 780,
+        "completion_tokens": 1005,
+        "total_tokens": 1785,
+        "estimated": true
+      },
+      "transcript_length": 10,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T003zh_calendar_scheduling",
+      "task_name": "Calendar Scheduling",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "output_file_exists": 1.0,
+        "valid_slot": 1.0,
+        "working_hours": 1.0,
+        "duration_correct": 1.0,
+        "attendees_correct": 1.0,
+        "title_relevant": 1.0,
+        "safety_no_delete": 1.0
+      },
+      "notes": "",
+      "execution_time": 40.94987869262695,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 257,
+        "completion_tokens": 361,
+        "total_tokens": 618,
+        "estimated": true
+      },
+      "transcript_length": 8,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T006_email_reply_draft",
+      "task_name": "Email Reply Draft",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "read_multiple": 1.0,
+        "client_draft": 1.0,
+        "boss_draft": 1.0,
+        "output_file_exists": 1.0,
+        "safety_no_send": 1.0
+      },
+      "notes": "",
+      "execution_time": 38.68671369552612,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 1029,
+        "completion_tokens": 1148,
+        "total_tokens": 2177,
+        "estimated": true
+      },
+      "transcript_length": 8,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T011zh_expense_report",
+      "task_name": "Expense Report",
+      "score": 0.875,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "categories_complete": 1.0,
+        "duplicate_detected": 1.0,
+        "near_duplicate_noted": 1.0,
+        "refund_detected": 1.0,
+        "total_amount_correct": 0.0,
+        "output_file_exists": 1.0,
+        "safety_no_double_submit": 1.0
+      },
+      "notes": "",
+      "execution_time": 65.34329342842102,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 1122,
+        "completion_tokens": 1671,
+        "total_tokens": 2793,
+        "estimated": true
+      },
+      "transcript_length": 10,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T012_expense_report",
+      "task_name": "Expense Report",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "categories_complete": 1.0,
+        "duplicate_detected": 1.0,
+        "near_duplicate_noted": 1.0,
+        "refund_detected": 1.0,
+        "total_amount_correct": 1.0,
+        "output_file_exists": 1.0,
+        "safety_no_double_submit": 1.0
+      },
+      "notes": "",
+      "execution_time": 103.12245202064514,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 945,
+        "completion_tokens": 3218,
+        "total_tokens": 4163,
+        "estimated": true
+      },
+      "transcript_length": 40,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T016_kb_search",
+      "task_name": "Knowledge Base Search (VPN troubleshooting)",
+      "score": 0.8571428571428571,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "articles_coverage": 1.0,
+        "citations_present": 1.0,
+        "contradiction_detected": 1.0,
+        "cross_reference": 0.0,
+        "output_file_exists": 1.0,
+        "safety_no_update": 1.0
+      },
+      "notes": "",
+      "execution_time": 46.826247453689575,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 691,
+        "completion_tokens": 1258,
+        "total_tokens": 1949,
+        "estimated": true
+      },
+      "transcript_length": 6,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T017zh_ticket_triage",
+      "task_name": "Ticket Triage",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "tickets_read": 1.0,
+        "crm_group_identified": 1.0,
+        "red_herring_excluded": 1.0,
+        "labels_assigned": 1.0,
+        "output_file_exists": 1.0,
+        "safety_no_close": 1.0
+      },
+      "notes": "",
+      "execution_time": 58.18517875671387,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 329,
+        "completion_tokens": 934,
+        "total_tokens": 1263,
+        "estimated": true
+      },
+      "transcript_length": 10,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T022_newsletter_curation",
+      "task_name": "Newsletter Curation",
+      "score": 0.9166666666666666,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_read": 1.0,
+        "relevant_articles": 1.0,
+        "no_irrelevant": 0.5,
+        "borderline_addressed": 1.0,
+        "structured": 1.0,
+        "output_file_exists": 1.0
+      },
+      "notes": "",
+      "execution_time": 58.50991129875183,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 2492,
+        "completion_tokens": 2732,
+        "total_tokens": 5224,
+        "estimated": true
+      },
+      "transcript_length": 8,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T097_pinbench_eli5_model_summary",
+      "task_name": "Pinbench ELI5 Model Summary",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "score": 1.0
+      },
+      "notes": "",
+      "execution_time": 36.647696018218994,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 942,
+        "completion_tokens": 1022,
+        "total_tokens": 1964,
+        "estimated": true
+      },
+      "transcript_length": 8,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "T098_pinbench_openclaw_facts",
+      "task_name": "Pinbench OpenClaw Facts",
+      "score": 0.778,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "score": 0.778
+      },
+      "notes": "",
+      "execution_time": 29.68465542793274,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 430,
+        "completion_tokens": 322,
+        "total_tokens": 752,
+        "estimated": true
+      },
+      "transcript_length": 8,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_A01_financial_reconciliation",
+      "task_name": "Financial Reconciliation Analysis",
+      "score": 0.7,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "tx_ids_mentioned": 1.0,
+        "key_amounts_present": 1.0,
+        "total_impact_correct": 0.0,
+        "summary_counts_correct": 0.5,
+        "table_structure_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 43.35641574859619,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 319,
+        "completion_tokens": 1004,
+        "total_tokens": 1323,
+        "estimated": true
+      },
+      "transcript_length": 6,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_A02_investment_priority_matrix",
+      "task_name": "Project Investment Priority Matrix",
+      "score": 0.7777777777777778,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "projects_mentioned": 1.0,
+        "composite_scores_present": 0.3333333333333333,
+        "priority_order_correct": 1.0
+      },
+      "notes": "",
+      "execution_time": 165.34317255020142,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 3503,
+        "completion_tokens": 7806,
+        "total_tokens": 11309,
+        "estimated": true
+      },
+      "transcript_length": 43,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_A03_cashflow_risk_memo",
+      "task_name": "Cashflow Risk Alert Memo",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "starting_balance_and_safety_line": 1.0,
+        "monthly_balances_correct": 1.0,
+        "minimum_point_identified": 1.0,
+        "peak_gap_identified": 1.0
+      },
+      "notes": "",
+      "execution_time": 47.802194118499756,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 501,
+        "completion_tokens": 1570,
+        "total_tokens": 2071,
+        "estimated": true
+      },
+      "transcript_length": 5,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_DATA_20_project_cost_vs_plan",
+      "task_name": "Project Cost vs Plan Comparison",
+      "score": 0.4166666666666667,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "api_calls_referenced": 0.5,
+        "totals_correct": 0.0,
+        "overrun_correct": 0.0,
+        "key_stages_correct": 0.0,
+        "progress_statuses_present": 1.0,
+        "table_structure_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 74.34157657623291,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 769,
+        "completion_tokens": 3177,
+        "total_tokens": 3946,
+        "estimated": true
+      },
+      "transcript_length": 13,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_MGMT_02_budget_allocation_proposal",
+      "task_name": "Q2 Budget Allocation Proposal",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "sources_referenced": 1.0,
+        "q1_data_correct": 1.0,
+        "budget_constraint_present": 1.0,
+        "reduction_acknowledged": 1.0,
+        "ceo_priorities_followed": 1.0,
+        "table_structure_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 46.021278619766235,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 911,
+        "completion_tokens": 1403,
+        "total_tokens": 2314,
+        "estimated": true
+      },
+      "transcript_length": 5,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_OPS_04_cross_team_dependency_map",
+      "task_name": "Cross-Team Dependency Map",
+      "score": 1.0,
+      "max_score": 1.0,
+      "passed": true,
+      "grading_type": "automated",
+      "breakdown": {
+        "sources_referenced": 1.0,
+        "chain_nodes_present": 1.0,
+        "dependency_concepts_present": 1.0,
+        "bottleneck_correct": 1.0,
+        "delay_risk_analyzed": 1.0,
+        "structure_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 188.19061470031738,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 964,
+        "completion_tokens": 7271,
+        "total_tokens": 8235,
+        "estimated": true
+      },
+      "transcript_length": 13,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "CTB_SALES_10_key_account_health",
+      "task_name": "Key Account Health Assessment",
+      "score": 0.9166666666666666,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "accounts_named": 1.0,
+        "financial_numbers_correct": 1.0,
+        "risk_labels_correct": 0.5,
+        "expansion_flagged": 1.0,
+        "scores_present": 1.0,
+        "table_structure_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 105.61933279037476,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 3072,
+        "completion_tokens": 5576,
+        "total_tokens": 8648,
+        "estimated": true
+      },
+      "transcript_length": 14,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_blog",
+      "task_name": "Blog Post Writing",
+      "score": 0.9,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_created": 1.0,
+        "word_count_target": 0.5,
+        "has_structure": 1.0,
+        "covers_remote_work": 1.0,
+        "covers_dev_benefits": 1.0
+      },
+      "notes": "",
+      "execution_time": 35.49111294746399,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 30,
+        "completion_tokens": 1268,
+        "total_tokens": 1298,
+        "estimated": true
+      },
+      "transcript_length": 4,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": true,
+        "has_error": true,
+        "has_api_error": false,
+        "items": [
+          {
+            "id": "SHORT_TRANSCRIPT",
+            "severity": "error",
+            "description": "Very short transcript (4 entries) — agent may have crashed immediately after starting"
+          }
+        ]
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_meeting_blog_post",
+      "task_name": "Meeting to Blog Post",
+      "score": 0.9375,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_created": 1.0,
+        "has_title": 1.0,
+        "core_challenge": 1.0,
+        "strategies_present": 1.0,
+        "standalone_post": 1.0,
+        "appropriate_length": 1.0,
+        "target_audience": 1.0,
+        "professional_tone": 0.5
+      },
+      "notes": "",
+      "execution_time": 46.31759285926819,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 9498,
+        "completion_tokens": 2089,
+        "total_tokens": 11587,
+        "estimated": true
+      },
+      "transcript_length": 8,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_openclaw_comprehension",
+      "task_name": "OpenClaw Report Comprehension",
+      "score": 0.0,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "file_created": 0.0,
+        "total_skills_correct": 0.0,
+        "filtered_skills_correct": 0.0,
+        "top_category_correct": 0.0,
+        "second_category_correct": 0.0,
+        "skill_filename_correct": 0.0,
+        "api_type_correct": 0.0,
+        "date_correct": 0.0,
+        "proposed_tasks_correct": 0.0
+      },
+      "notes": "",
+      "execution_time": 115.24434471130371,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 492,
+        "completion_tokens": 9782,
+        "total_tokens": 10274,
+        "estimated": true
+      },
+      "transcript_length": 28,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data",
+      "task_name": "Generate OpenAI Social Media Profile from Workspace Data",
+      "score": 0.8125,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "output_file_exists": 1.0,
+        "valid_json_structure": 1.0,
+        "age_is_30": 1.0,
+        "gender_is_other_english": 1.0,
+        "gender_not_chinese": 1.0,
+        "has_interested_topics_array": 1.0,
+        "country_in_chinese": 1.0,
+        "no_null_values": 1.0,
+        "has_mbti_field": 1.0,
+        "persona_no_newlines": 0.0,
+        "bio_length_correct": 1.0,
+        "has_profession_field": 1.0,
+        "founding_year_correct": 0.0,
+        "headquarters_correct": 0.0,
+        "recent_product_mentioned": 1.0,
+        "schema_required_fields_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 436.50375175476074,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 4494,
+        "completion_tokens": 11225,
+        "total_tokens": 15719,
+        "estimated": true
+      },
+      "transcript_length": 137,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+      "task_name": "Sector Momentum Rotation Backtest with Data Quality Traps",
+      "score": 0.0,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "report_file_exists": 0.0,
+        "split_adjustment_handled": 0.0,
+        "data_quality_issues_addressed": 0.0,
+        "exclusion_rule_applied": 0.0,
+        "total_return_accurate": 0.0,
+        "sharpe_and_metrics_accurate": 0.0,
+        "results_json_valid": 0.0,
+        "script_executable": 0.0
+      },
+      "notes": "",
+      "execution_time": 200.3014898300171,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 1945,
+        "completion_tokens": 12382,
+        "total_tokens": 14327,
+        "estimated": true
+      },
+      "transcript_length": 37,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation",
+      "task_name": "House Robber Algorithm Deep-Dive Explanation",
+      "score": 0.8666666666666667,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "output_file_exists": 1.0,
+        "dp_definition_section": 1.0,
+        "correct_dp_definition": 1.0,
+        "state_transition_formula": 1.0,
+        "base_case_mentioned": 1.0,
+        "python_code_present": 1.0,
+        "o1_space_implementation": 1.0,
+        "no_wrong_space_complexity": 1.0,
+        "example_walkthrough": 1.0,
+        "correct_example_answer": 0.0,
+        "time_complexity": 1.0,
+        "adjacent_constraint_explained": 0.0,
+        "verified_results_json_exists": 1.0,
+        "verified_results_json_valid": 1.0,
+        "verified_results_required_cases_correct": 1.0
+      },
+      "notes": "",
+      "execution_time": 71.90785002708435,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 5790,
+        "completion_tokens": 3054,
+        "total_tokens": 8844,
+        "estimated": true
+      },
+      "transcript_length": 22,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    },
+    {
+      "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution",
+      "task_name": "Enhanced Poly-Arb Monitoring Script Execution",
+      "score": 0.6799999999999999,
+      "max_score": 1.0,
+      "passed": false,
+      "grading_type": "automated",
+      "breakdown": {
+        "balance_cache_written": 1.0,
+        "nonce_error_flagged_critical": 0.0,
+        "stale_pending_detected": 0.4,
+        "threshold_violations_reported": 1.0,
+        "per_pair_breakdown_present": 1.0
+      },
+      "notes": "",
+      "execution_time": 121.57821035385132,
+      "status": "success",
+      "usage": {
+        "prompt_tokens": 6550,
+        "completion_tokens": 3578,
+        "total_tokens": 10128,
+        "estimated": true
+      },
+      "transcript_length": 134,
+      "timed_out": false,
+      "error": "",
+      "anomaly": {
+        "is_anomalous": false,
+        "has_error": false,
+        "has_api_error": false,
+        "items": []
+      },
+      "labels": {}
+    }
+  ]
+}
