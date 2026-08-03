@@ -8,4 +8,4 @@
 - **Owner and artifacts:** This branch owns `plan.md`, `scripts/harness_adaptation/`, `tests/harness_adaptation/`, and `experiment/harness_adaptation/`. Full raw artifacts are sealed at the path and hash in `experiment/harness_adaptation/artifact_manifest.json`.
 - **Verification:** 72/72 formal executions produced deterministic results; 0 API/status failures; 7/7 local tests pass including the real PawBench overlay integration test; archive size/hash/readability verified.
 - **Status:** Phase 0 complete. Next is the non-training WorkBench substrate parity gate; training remains unauthorized.
-- **Commit:** pending
+- **Commit:** `5aca1ec`
