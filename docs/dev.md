@@ -8,7 +8,7 @@
 - **Owner and artifacts:** `scripts/harness_adaptation/analyze_pawbench_trajectories.py`, `experiment/harness_adaptation/runs/P0-matrix-24x3-final/trajectory_analysis.json`, and `experiment/harness_adaptation/P0_TRAJECTORY_ANALYSIS.md`.
 - **Verification:** Analyzer re-read all 72 transcripts and 72 native results; task sets match; output reports 24 tasks/72 trajectories; JSON parses successfully; report values were checked against the generated artifact.
 - **Status:** Analysis complete. The experience rules are proposals with trajectory-level evidence and still require held-out, no-experience-prompt internalization tests.
-- **Commit:** pending
+- **Commit:** `6ea9aee`
 
 ## 2026-08-03 — Workplace harness-adaptation Phase 0
 
