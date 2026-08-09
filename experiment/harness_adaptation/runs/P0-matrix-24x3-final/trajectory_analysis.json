@@ -1,0 +1,885 @@
+{
+  "schema": "pawbench-trajectory-analysis/v1",
+  "run_id": "P0-matrix-24x3-final",
+  "task_count": 24,
+  "trajectory_count": 72,
+  "turn_definition": "one assistant-role message",
+  "prompt_metadata": {
+    "qwenpaw": {
+      "system_prompt_chars": 975,
+      "declared_tool_count": null
+    },
+    "openclaw": {
+      "system_prompt_chars": 29108,
+      "declared_tool_count": 25
+    },
+    "hermes": {
+      "system_prompt_chars": null,
+      "declared_tool_count": null
+    }
+  },
+  "harnesses": {
+    "qwenpaw": {
+      "tasks": 24,
+      "full_passes": 8,
+      "mean_score": 0.8074596560846561,
+      "estimated_usage": {
+        "prompt_tokens": 47855,
+        "completion_tokens": 84856,
+        "total_tokens": 132711
+      },
+      "execution_seconds": {
+        "mean": 92.27761297424634,
+        "median": 58.34754502773285,
+        "min": 29.68465542793274,
+        "max": 436.50375175476074
+      },
+      "assistant_turns": {
+        "mean": 11.541666666666666,
+        "median": 5.0,
+        "min": 2,
+        "max": 67
+      },
+      "tool_calls": {
+        "mean": 11.833333333333334,
+        "median": 4.0,
+        "min": 1,
+        "max": 71
+      },
+      "tool_name_counts": {
+        "browser_use": 7,
+        "edit_file": 22,
+        "execute_shell_command": 94,
+        "glob_search": 5,
+        "read_file": 72,
+        "send_file_to_user": 1,
+        "write_file": 83
+      },
+      "read_task_coverage": 22,
+      "write_task_coverage": 20,
+      "shell_task_coverage": 14,
+      "zero_tool_tasks": 0,
+      "total_consecutive_exact_repeats": 52
+    },
+    "openclaw": {
+      "tasks": 24,
+      "full_passes": 5,
+      "mean_score": 0.7386980820105821,
+      "estimated_usage": {
+        "prompt_tokens": 33521,
+        "completion_tokens": 30491,
+        "total_tokens": 64012
+      },
+      "execution_seconds": {
+        "mean": 87.50063578287761,
+        "median": 65.90832185745239,
+        "min": 49.91783785820007,
+        "max": 371.70945739746094
+      },
+      "assistant_turns": {
+        "mean": 4.083333333333333,
+        "median": 3.0,
+        "min": 1,
+        "max": 17
+      },
+      "tool_calls": {
+        "mean": 4.416666666666667,
+        "median": 3.0,
+        "min": 1,
+        "max": 16
+      },
+      "tool_name_counts": {
+        "edit": 1,
+        "exec": 16,
+        "media": 10,
+        "memory_search": 2,
+        "read": 55,
+        "web_search": 1,
+        "write": 21
+      },
+      "read_task_coverage": 23,
+      "write_task_coverage": 16,
+      "shell_task_coverage": 8,
+      "zero_tool_tasks": 0,
+      "total_consecutive_exact_repeats": 11
+    },
+    "hermes": {
+      "tasks": 24,
+      "full_passes": 5,
+      "mean_score": 0.7002997685185185,
+      "estimated_usage": {
+        "prompt_tokens": 35026,
+        "completion_tokens": 37581,
+        "total_tokens": 72607
+      },
+      "execution_seconds": {
+        "mean": 123.28015156586964,
+        "median": 38.824904680252075,
+        "min": 17.54384160041809,
+        "max": 909.8806474208832
+      },
+      "assistant_turns": {
+        "mean": 6.333333333333333,
+        "median": 3.0,
+        "min": 1,
+        "max": 44
+      },
+      "tool_calls": {
+        "mean": 5.708333333333333,
+        "median": 2.0,
+        "min": 0,
+        "max": 43
+      },
+      "tool_name_counts": {
+        "cronjob": 2,
+        "execute_code": 12,
+        "patch": 2,
+        "read_file": 36,
+        "search_files": 10,
+        "terminal": 18,
+        "write_file": 57
+      },
+      "read_task_coverage": 20,
+      "write_task_coverage": 15,
+      "shell_task_coverage": 6,
+      "zero_tool_tasks": 3,
+      "total_consecutive_exact_repeats": 44
+    }
+  },
+  "pairwise": {
+    "qwenpaw_vs_openclaw": {
+      "left_score_wins": 9,
+      "ties": 9,
+      "right_score_wins": 6,
+      "mean_score_delta": 0.06876157407407407,
+      "left_full_pass_right_not": 5,
+      "right_full_pass_left_not": 2
+    },
+    "qwenpaw_vs_hermes": {
+      "left_score_wins": 11,
+      "ties": 8,
+      "right_score_wins": 5,
+      "mean_score_delta": 0.10715988756613756,
+      "left_full_pass_right_not": 4,
+      "right_full_pass_left_not": 1
+    },
+    "openclaw_vs_hermes": {
+      "left_score_wins": 7,
+      "ties": 8,
+      "right_score_wins": 9,
+      "mean_score_delta": 0.03839831349206349,
+      "left_full_pass_right_not": 4,
+      "right_full_pass_left_not": 4
+    }
+  },
+  "top_counts": {
+    "unique_top": {
+      "openclaw": 3,
+      "hermes": 3,
+      "qwenpaw": 6
+    },
+    "including_ties": {
+      "openclaw": 12,
+      "hermes": 12,
+      "qwenpaw": 16
+    }
+  },
+  "scenario_scores": {
+    "Content_Creation": {
+      "tasks": 5,
+      "mean_scores": {
+        "qwenpaw": 0.9133333333333333,
+        "openclaw": 0.7575,
+        "hermes": 0.8754166666666666
+      }
+    },
+    "Data_Analytics": {
+      "tasks": 7,
+      "mean_scores": {
+        "qwenpaw": 0.8301587301587301,
+        "openclaw": 0.8326190476190476,
+        "hermes": 0.5428571428571428
+      }
+    },
+    "Finance_Investment": {
+      "tasks": 2,
+      "mean_scores": {
+        "qwenpaw": 0.33999999999999997,
+        "openclaw": 0.0,
+        "hermes": 0.183
+      }
+    },
+    "Information_Retrieval": {
+      "tasks": 2,
+      "mean_scores": {
+        "qwenpaw": 0.861904761904762,
+        "openclaw": 0.42857142857142855,
+        "hermes": 0.9166666666666667
+      }
+    },
+    "Knowledge": {
+      "tasks": 2,
+      "mean_scores": {
+        "qwenpaw": 0.389,
+        "openclaw": 0.8056666666666668,
+        "hermes": 0.389
+      }
+    },
+    "Office_Productivity": {
+      "tasks": 6,
+      "mean_scores": {
+        "qwenpaw": 0.9699074074074074,
+        "openclaw": 0.9407407407407408,
+        "hermes": 0.9421296296296297
+      }
+    }
+  },
+  "source_scores": {
+    "claweval": {
+      "tasks": 17,
+      "mean_scores": {
+        "qwenpaw": 0.8930802987861811,
+        "openclaw": 0.8828188608776845,
+        "hermes": 0.7684771241830065
+      },
+      "write_task_coverage": {
+        "qwenpaw": 13,
+        "openclaw": 13,
+        "hermes": 10
+      }
+    },
+    "pinchbench": {
+      "tasks": 3,
+      "mean_scores": {
+        "qwenpaw": 0.6125,
+        "openclaw": 0.9069444444444444,
+        "hermes": 0.5875
+      },
+      "write_task_coverage": {
+        "qwenpaw": 3,
+        "openclaw": 3,
+        "hermes": 2
+      }
+    },
+    "qwenclawbench": {
+      "tasks": 4,
+      "mean_scores": {
+        "qwenpaw": 0.5897916666666667,
+        "openclaw": 0.0,
+        "hermes": 0.49514583333333334
+      },
+      "write_task_coverage": {
+        "qwenpaw": 4,
+        "openclaw": 0,
+        "hermes": 3
+      }
+    }
+  },
+  "diagnostic_runtime_clean": {
+    "excluded_tasks": [
+      "CTB_A02_investment_priority_matrix",
+      "CTB_A03_cashflow_risk_memo"
+    ],
+    "reason": "Hermes terminal traceback reached the per-task process limit; post-hoc diagnostic only",
+    "tasks": 22,
+    "mean_scores": {
+      "qwenpaw": 0.8000569985569985,
+      "openclaw": 0.7149433621933622,
+      "hermes": 0.7639633838383838
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "CTB_A01_financial_reconciliation",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.7,
+        "openclaw": 0.8,
+        "hermes": 0.8
+      },
+      "top_harnesses": [
+        "openclaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 2,
+        "openclaw": 3,
+        "hermes": 2
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 4,
+        "hermes": 3
+      }
+    },
+    {
+      "task_id": "CTB_A02_investment_priority_matrix",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.7777777777777778,
+        "openclaw": 1.0,
+        "hermes": 0.0
+      },
+      "top_harnesses": [
+        "openclaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 20,
+        "openclaw": 4,
+        "hermes": 1
+      },
+      "tool_calls": {
+        "qwenpaw": 22,
+        "openclaw": 6,
+        "hermes": 0
+      }
+    },
+    {
+      "task_id": "CTB_A03_cashflow_risk_memo",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 1.0,
+        "hermes": 0.0
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 2,
+        "openclaw": 3,
+        "hermes": 1
+      },
+      "tool_calls": {
+        "qwenpaw": 2,
+        "openclaw": 3,
+        "hermes": 0
+      }
+    },
+    {
+      "task_id": "CTB_DATA_20_project_cost_vs_plan",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.4166666666666667,
+        "openclaw": 0.5833333333333334,
+        "hermes": 0.6666666666666666
+      },
+      "top_harnesses": [
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 6,
+        "openclaw": 14,
+        "hermes": 10
+      },
+      "tool_calls": {
+        "qwenpaw": 6,
+        "openclaw": 13,
+        "hermes": 10
+      }
+    },
+    {
+      "task_id": "CTB_MGMT_02_budget_allocation_proposal",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 0.8333333333333334,
+        "hermes": 0.8333333333333334
+      },
+      "top_harnesses": [
+        "qwenpaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 2,
+        "openclaw": 2,
+        "hermes": 2
+      },
+      "tool_calls": {
+        "qwenpaw": 2,
+        "openclaw": 2,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "CTB_OPS_04_cross_team_dependency_map",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 0.945,
+        "hermes": 0.8333333333333334
+      },
+      "top_harnesses": [
+        "qwenpaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 6,
+        "openclaw": 2,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 6,
+        "openclaw": 2,
+        "hermes": 3
+      }
+    },
+    {
+      "task_id": "CTB_SALES_10_key_account_health",
+      "scenario_root": "Data_Analytics",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.9166666666666666,
+        "openclaw": 0.6666666666666666,
+        "hermes": 0.6666666666666666
+      },
+      "top_harnesses": [
+        "qwenpaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 6,
+        "openclaw": 2,
+        "hermes": 2
+      },
+      "tool_calls": {
+        "qwenpaw": 7,
+        "openclaw": 3,
+        "hermes": 3
+      }
+    },
+    {
+      "task_id": "T002_email_triage",
+      "scenario_root": "Office_Productivity",
+      "source": "claweval",
+      "complexity": "L2",
+      "scores": {
+        "qwenpaw": 0.9444444444444445,
+        "openclaw": 0.9444444444444445,
+        "hermes": 0.9444444444444445
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 5,
+        "openclaw": 3,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 4,
+        "openclaw": 2,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "T003zh_calendar_scheduling",
+      "scenario_root": "Office_Productivity",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 1.0,
+        "hermes": 0.75
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 4,
+        "openclaw": 5,
+        "hermes": 8
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 4,
+        "hermes": 7
+      }
+    },
+    {
+      "task_id": "T006_email_reply_draft",
+      "scenario_root": "Office_Productivity",
+      "source": "claweval",
+      "complexity": "L2",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 0.9500000000000001,
+        "hermes": 1.0
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 4,
+        "openclaw": 3,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 2,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "T011zh_expense_report",
+      "scenario_root": "Office_Productivity",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.875,
+        "openclaw": 0.875,
+        "hermes": 0.9583333333333334
+      },
+      "top_harnesses": [
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 5,
+        "openclaw": 2,
+        "hermes": 5
+      },
+      "tool_calls": {
+        "qwenpaw": 4,
+        "openclaw": 2,
+        "hermes": 4
+      }
+    },
+    {
+      "task_id": "T012_expense_report",
+      "scenario_root": "Office_Productivity",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 0.875,
+        "hermes": 1.0
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 20,
+        "openclaw": 3,
+        "hermes": 4
+      },
+      "tool_calls": {
+        "qwenpaw": 19,
+        "openclaw": 2,
+        "hermes": 3
+      }
+    },
+    {
+      "task_id": "T016_kb_search",
+      "scenario_root": "Information_Retrieval",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.8571428571428571,
+        "openclaw": 0.8571428571428571,
+        "hermes": 1.0
+      },
+      "top_harnesses": [
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 3,
+        "openclaw": 2,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 2,
+        "openclaw": 2,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "T017zh_ticket_triage",
+      "scenario_root": "Office_Productivity",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 1.0,
+        "hermes": 1.0
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 5,
+        "openclaw": 4,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 4,
+        "openclaw": 3,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "T022_newsletter_curation",
+      "scenario_root": "Content_Creation",
+      "source": "claweval",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.9166666666666666,
+        "openclaw": 1.0,
+        "hermes": 0.8333333333333334
+      },
+      "top_harnesses": [
+        "openclaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 4,
+        "openclaw": 4,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 2,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "T097_pinbench_eli5_model_summary",
+      "scenario_root": "Content_Creation",
+      "source": "claweval",
+      "complexity": "L2",
+      "scores": {
+        "qwenpaw": 1.0,
+        "openclaw": 0.9,
+        "hermes": 1.0
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 4,
+        "openclaw": 4,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 3,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "T098_pinbench_openclaw_facts",
+      "scenario_root": "Knowledge",
+      "source": "claweval",
+      "complexity": "L1",
+      "scores": {
+        "qwenpaw": 0.778,
+        "openclaw": 0.778,
+        "hermes": 0.778
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 4,
+        "openclaw": 4,
+        "hermes": 3
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 3,
+        "hermes": 2
+      }
+    },
+    {
+      "task_id": "task_00052_generate_openai_social_media_profile_from_workspace_data",
+      "scenario_root": "Content_Creation",
+      "source": "qwenclawbench",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.8125,
+        "openclaw": 0.0,
+        "hermes": 0.78125
+      },
+      "top_harnesses": [
+        "qwenpaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 65,
+        "openclaw": 2,
+        "hermes": 44
+      },
+      "tool_calls": {
+        "qwenpaw": 71,
+        "openclaw": 9,
+        "hermes": 43
+      }
+    },
+    {
+      "task_id": "task_00068_enhanced_poly_arb_monitoring_script_execution",
+      "scenario_root": "Finance_Investment",
+      "source": "qwenclawbench",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.6799999999999999,
+        "openclaw": 0.0,
+        "hermes": 0.366
+      },
+      "top_harnesses": [
+        "qwenpaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 67,
+        "openclaw": 4,
+        "hermes": 14
+      },
+      "tool_calls": {
+        "qwenpaw": 66,
+        "openclaw": 4,
+        "hermes": 14
+      }
+    },
+    {
+      "task_id": "task_00075_sector_momentum_rotation_backtest_with_data_quality_traps",
+      "scenario_root": "Finance_Investment",
+      "source": "qwenclawbench",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.0,
+        "openclaw": 0.0,
+        "hermes": 0.0
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 16,
+        "openclaw": 1,
+        "hermes": 1
+      },
+      "tool_calls": {
+        "qwenpaw": 20,
+        "openclaw": 6,
+        "hermes": 0
+      }
+    },
+    {
+      "task_id": "task_00100_house_robber_algorithm_deep_dive_explanation",
+      "scenario_root": "Information_Retrieval",
+      "source": "qwenclawbench",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.8666666666666667,
+        "openclaw": 0.0,
+        "hermes": 0.8333333333333334
+      },
+      "top_harnesses": [
+        "qwenpaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 7,
+        "openclaw": 3,
+        "hermes": 27
+      },
+      "tool_calls": {
+        "qwenpaw": 14,
+        "openclaw": 9,
+        "hermes": 26
+      }
+    },
+    {
+      "task_id": "task_blog",
+      "scenario_root": "Content_Creation",
+      "source": "pinchbench",
+      "complexity": "L1",
+      "scores": {
+        "qwenpaw": 0.9,
+        "openclaw": 0.95,
+        "hermes": 0.95
+      },
+      "top_harnesses": [
+        "openclaw",
+        "hermes"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 2,
+        "openclaw": 2,
+        "hermes": 2
+      },
+      "tool_calls": {
+        "qwenpaw": 1,
+        "openclaw": 1,
+        "hermes": 1
+      }
+    },
+    {
+      "task_id": "task_meeting_blog_post",
+      "scenario_root": "Content_Creation",
+      "source": "pinchbench",
+      "complexity": "L2",
+      "scores": {
+        "qwenpaw": 0.9375,
+        "openclaw": 0.9375,
+        "hermes": 0.8125
+      },
+      "top_harnesses": [
+        "qwenpaw",
+        "openclaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 4,
+        "openclaw": 5,
+        "hermes": 4
+      },
+      "tool_calls": {
+        "qwenpaw": 3,
+        "openclaw": 3,
+        "hermes": 3
+      }
+    },
+    {
+      "task_id": "task_openclaw_comprehension",
+      "scenario_root": "Knowledge",
+      "source": "pinchbench",
+      "complexity": "L3",
+      "scores": {
+        "qwenpaw": 0.0,
+        "openclaw": 0.8333333333333334,
+        "hermes": 0.0
+      },
+      "top_harnesses": [
+        "openclaw"
+      ],
+      "assistant_turns": {
+        "qwenpaw": 14,
+        "openclaw": 17,
+        "hermes": 1
+      },
+      "tool_calls": {
+        "qwenpaw": 13,
+        "openclaw": 16,
+        "hermes": 1
+      }
+    }
+  ]
+}

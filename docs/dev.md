@@ -1,5 +1,15 @@
 # Development Log
 
+## 2026-08-09 — PawBench 24×3 trajectory mechanism analysis
+
+- **Question:** Why does QwenPaw lead the frozen 24-task matrix, where do OpenClaw and Hermes win, and which trajectory mechanisms are reusable for Polar experience learning?
+- **Decision:** QwenPaw's aggregate lead is concentrated in the four QwenClawBench long-horizon tasks and is associated with artifact-producing persistence, not uniform superiority. OpenClaw is strongest on concise completion and tiered recovery; Hermes is competitive on direct file/compute tasks but loses to workspace-path and runtime failures. The comparison is not compute-matched.
+- **Solution:** Added a reproducible 72-trajectory analyzer, machine-readable statistics, a full mechanism report, a 24-task score/turn ledger, and evidence-bounded contrastive experience rules.
+- **Owner and artifacts:** `scripts/harness_adaptation/analyze_pawbench_trajectories.py`, `experiment/harness_adaptation/runs/P0-matrix-24x3-final/trajectory_analysis.json`, and `experiment/harness_adaptation/P0_TRAJECTORY_ANALYSIS.md`.
+- **Verification:** Analyzer re-read all 72 transcripts and 72 native results; task sets match; output reports 24 tasks/72 trajectories; JSON parses successfully; report values were checked against the generated artifact.
+- **Status:** Analysis complete. The experience rules are proposals with trajectory-level evidence and still require held-out, no-experience-prompt internalization tests.
+- **Commit:** pending
+
 ## 2026-08-03 — Workplace harness-adaptation Phase 0
 
 - **Question:** Does changing QwenPaw, OpenClaw, or Hermes while holding the model, task, endpoint, decoding budget, and grader fixed create a measurable workplace-performance gap?
